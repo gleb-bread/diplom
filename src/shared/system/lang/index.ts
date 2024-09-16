@@ -1,0 +1,1 @@
+export { getLang } from "./lang";
