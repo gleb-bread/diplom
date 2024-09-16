@@ -25,11 +25,17 @@ declare module "vue-router" {
       Record<never, never>,
       Record<never, never>
     >;
+    [RoutersNames.LOGIN]: RouteRecordInfo<
+      `${[RoutersNames.LOGIN]}`,
+      "/login",
+      Record<never, never>,
+      Record<never, never>
+    >;
   }
 }
 
 declare module "@vue/runtime-core" {
   export interface ComponentCustomProperties {
-    $router: typeof router.currentRoute.value;
+    $router: typeof router;
   }
 }

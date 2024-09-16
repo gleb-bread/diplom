@@ -12,7 +12,7 @@ function checkAuthToken(Router: typeof router) {
     const token = userStore.getAuthToken;
 
     if (to.matched.some((record) => record.meta.requiresAuth) && !token) {
-      next({ name: RoutersNames.REG });
+      next({ name: RoutersNames.LOGIN });
     } else {
       next();
     }

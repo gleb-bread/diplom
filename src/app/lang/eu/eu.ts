@@ -9,6 +9,14 @@ export class LangEU {
       REG: {
         LOGIN: "Login",
         PASSWORD: "Password",
+        TITLELOGIN: 'Log in',
+        TITLEREG: 'Register',
+        BTNLOGIN: 'Log in',
+        BTNREG: 'Register',
+        TITLEOR: 'Or',
+        BTNGOOGLE: 'Log in using Google',
+        TITLELINKREG: 'Register',
+        TITLELINKRESETPASSWORD: 'Recover password',
       },
     };
   }

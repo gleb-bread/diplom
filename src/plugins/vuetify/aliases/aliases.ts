@@ -4,9 +4,15 @@ import * as Components from "vuetify/components";
 export interface IAliases {
   [AliasesUI.DesktopMenuList]: typeof Components.VList;
   [AliasesUI.DesktopMenuListItem]: typeof Components.VListItem;
+  [AliasesUI.OutlinedTextField]: typeof Components.VTextField;
+  [AliasesUI.OutlinedBtn]: typeof Components.VBtn;
+  [AliasesUI.DefaultBtn]: typeof Components.VBtn;
 }
 
 export const Aliases: IAliases = {
   [AliasesUI.DesktopMenuList]: Components.VList,
   [AliasesUI.DesktopMenuListItem]: Components.VListItem,
+  [AliasesUI.OutlinedTextField]: Components.VTextField,
+  [AliasesUI.OutlinedBtn]: Components.VBtn,
+  [AliasesUI.DefaultBtn]: Components.VBtn,
 };

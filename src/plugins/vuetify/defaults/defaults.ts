@@ -11,4 +11,19 @@ export const Default: {
     class: ["desktop-menu-list-item"],
     link: true,
   },
+  [AliasesUI.OutlinedTextField]: {
+    variant: 'outlined',
+    density: 'compact'
+  },
+  [AliasesUI.OutlinedBtn]: {
+    variant: 'outlined',
+    density: 'compact',
+    class: ['text-body-2']
+  },
+  [AliasesUI.DefaultBtn]: {
+    variant: 'tonal',
+    color: 'primary',
+    density: 'compact',
+    class: ['text-body-2']
+  }
 };
