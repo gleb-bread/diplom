@@ -1,5 +1,5 @@
-import { RouterAPI } from "./router"
+import { RouterAPI } from "./router";
 
 export const Helper = {
-    RouterAPI
-}
+  RouterAPI,
+};

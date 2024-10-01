@@ -1,2 +1,2 @@
 export { Model } from "./model";
-export { Right } from "./right";
+export { User } from "./user";

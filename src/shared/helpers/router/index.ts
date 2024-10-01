@@ -1,1 +1,1 @@
-export * as RouterAPI from './router';
+export * as RouterAPI from "./router";

@@ -9,14 +9,14 @@ export class LangRU {
       REG: {
         LOGIN: "Логин",
         PASSWORD: "Пароль",
-        TITLELOGIN: 'Войти',
-        TITLEREG: 'Зарегистрироваться',
-        BTNLOGIN: 'Войти',
-        BTNREG: 'Зарегистрироваться',
-        TITLEOR: 'Или',
-        BTNGOOGLE: 'Войти с помощью Google',
-        TITLELINKREG: 'Зарегистрироваться',
-        TITLELINKRESETPASSWORD: 'Восстановить пароль',
+        TITLELOGIN: "Войти",
+        TITLEREG: "Зарегистрироваться",
+        BTNLOGIN: "Войти",
+        BTNREG: "Зарегистрироваться",
+        TITLEOR: "Или",
+        BTNGOOGLE: "Войти с помощью Google",
+        TITLELINKREG: "Зарегистрироваться",
+        TITLELINKRESETPASSWORD: "Восстановить пароль",
       },
     };
   }

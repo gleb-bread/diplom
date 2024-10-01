@@ -12,18 +12,18 @@ export const Default: {
     link: true,
   },
   [AliasesUI.OutlinedTextField]: {
-    variant: 'outlined',
-    density: 'compact'
+    variant: "outlined",
+    density: "compact",
   },
   [AliasesUI.OutlinedBtn]: {
-    variant: 'outlined',
-    density: 'compact',
-    class: ['text-body-2']
+    variant: "outlined",
+    density: "compact",
+    class: ["text-body-2"],
   },
   [AliasesUI.DefaultBtn]: {
-    variant: 'tonal',
-    color: 'primary',
-    density: 'compact',
-    class: ['text-body-2']
-  }
+    variant: "tonal",
+    color: "primary",
+    density: "compact",
+    class: ["text-body-2"],
+  },
 };
