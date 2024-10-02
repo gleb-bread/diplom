@@ -12,13 +12,13 @@ export class User extends Repositories.ARepository.ARepository {
     this.URL = '/api/register';
 
     return this.POST().then(response => {
-        return this.generateResponse<DTOs.User.UserDTO>(
+        return this.generateResponse<DTOs.UserAuth.UserAuthDTO>(
             {
                 'response': response,
             }
         );
     }).catch(response => {
-        return this.generateResponse<DTOs.User.UserDTO>(
+        return this.generateResponse<DTOs.UserAuth.UserAuthDTO>(
             {
                 'response': response,
             }

@@ -3,13 +3,15 @@ import * as Models from '@/entities/models';
 import * as Repositories from '@/entities/repositories';
 import type {Response} from '../Service/types';
 import * as DTOs from '@/entities/DTOs';
+import { Helper } from '@/shared/helpers';
+import type { UnwrapRef } from 'vue';
 
 export class User extends Service{
     constructor(){
         super();
     }
 
-    public async addUser(user: Models.User): Promise<Response<Models.User>>{
+    public async addUser(user: Models.User | UnwrapRef<Models.User>): Promise<Response<Models.UserAuth>>{
         const repository = new Repositories.User({payload: user.getDTO()});
 
         const response = await repository.addUser();
@@ -18,9 +20,12 @@ export class User extends Service{
             this.validateRequest({
                 response: response,
 
-                success: (response) => {
+                success: async (response) => {
                     const userDTO = response.response.data;
-                    const user = DTOs.User.toModel(userDTO);
+                    const user = DTOs.UserAuth.toModel(userDTO);
+                    const tokenResponse = new Response(user.token);
+
+                    await Helper.CacheAPI.setCacheData('token', '/', tokenResponse);
 
                     resolve({
                         status: response.status,
@@ -33,7 +38,7 @@ export class User extends Service{
                     resolve({
                         status: response.status,
                         result: response.result,
-                        data: {} as Models.User,
+                        data: {} as Models.UserAuth,
                     });
                 },
             });

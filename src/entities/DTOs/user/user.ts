@@ -10,6 +10,7 @@ export type UserDTO = {
   delayed: number;
   created_at: string | null;
   updated_at: string | null;
+  password: string;
 };
 
 export const toModel = function (dto: UserDTO) {

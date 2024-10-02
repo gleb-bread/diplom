@@ -1,6 +1,7 @@
 import * as RepositoryTypes from "./types";
 import { AxiosError, type AxiosRequestConfig } from "axios";
 import { type AxiosResponse } from "axios";
+import { Helper } from "@/shared/helpers";
 import axios from "axios";
 
 export class ARepository {
@@ -59,7 +60,11 @@ export class ARepository {
     if (this._config?.headers) {
       return { headers: this._config.headers } as AxiosRequestConfig;
     } else {
-      return {} as AxiosRequestConfig;
+      return {
+        headers: {
+          'Accept': 'application/json',
+        }
+      } as AxiosRequestConfig;
     }
   }
 
