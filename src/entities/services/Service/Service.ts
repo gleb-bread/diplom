@@ -24,9 +24,9 @@ export class Service {
         }, [] as Array<T[K]>);
     }
 
-    protected validateRequest<T>(payload: ServiceTypes.ValidatePayload<T>) {
+    protected validateRequest<T, E>(payload: ServiceTypes.ValidatePayload<T, E>) {
         try {
-            if (!(payload.response.result && payload.response.response)) {
+            if (!(payload.response.result)) {
                 console.error(payload.response);
                 payload.error(payload.response);
             } else {

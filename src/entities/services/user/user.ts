@@ -11,12 +11,12 @@ export class User extends Service{
         super();
     }
 
-    public async addUser(user: Models.User | UnwrapRef<Models.User>): Promise<Response<Models.UserAuth>>{
+    public async addUser(user: Models.User | UnwrapRef<Models.User>){
         const repository = new Repositories.User({payload: user.getDTO()});
 
         const response = await repository.addUser();
 
-        return new Promise((resolve, reject) => {
+        return new Promise<Response<Models.UserAuth>>((resolve, reject) => {
             this.validateRequest({
                 response: response,
 
@@ -35,10 +35,10 @@ export class User extends Service{
                 },
 
                 error: (response) => {
-                    resolve({
+                    reject({
                         status: response.status,
                         result: response.result,
-                        data: {} as Models.UserAuth,
+                        data: response,
                     });
                 },
             });

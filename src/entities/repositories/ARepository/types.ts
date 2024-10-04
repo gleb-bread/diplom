@@ -1,4 +1,4 @@
-import { type AxiosResponse } from "axios";
+import { AxiosError, type AxiosResponse } from "axios";
 
 export type RepositoryConfig = {
   id?: number;
@@ -76,6 +76,18 @@ export interface ResponsePayload<T> {
   status: number;
   result: boolean;
   response: AxiosResponse<T, any> | null;
+}
+
+export type ResponsePayloadSuccess<T> = {
+  status: number;
+  result: true;
+  response: AxiosResponse<T, any> | null;
+}
+
+export type ResponsePayloadError<T> = {
+  status: number;
+  result: false;
+  response: AxiosError<T, any> | null;
 }
 
 export interface ResponseSuccessPayload<T> {

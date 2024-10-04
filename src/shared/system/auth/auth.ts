@@ -6,6 +6,8 @@ export const checkAuth = async function () {
   const userStore = useUserStore();
 
   const token = await cachedResponse?.text();
+  
+  console.log(token);
 
   if (token) {
     userStore.setAuthToken(token);

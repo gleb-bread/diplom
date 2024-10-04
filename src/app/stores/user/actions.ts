@@ -2,7 +2,6 @@ import { initState } from "./state";
 import type { Languages } from "@/shared/system/lang/type";
 import * as UserTemplatesStore from './template';
 import * as Services from '@/entities/services';
-import * as Models from "@/entities/models";
 
 export const initActions = function (state: ReturnType<typeof initState>) {
   
@@ -19,11 +18,14 @@ export const initActions = function (state: ReturnType<typeof initState>) {
 
     const response = await service.addUser(state.newUser.value);
 
+    console.log(response);
+
     if(response.result){
       state.userInfo.value = response.data.user;
       restoreNewUser();
+      return {'success': true};
     } else {
-
+      return {'success': false, data: {}};
     }
   }
 
@@ -33,3 +35,4 @@ export const initActions = function (state: ReturnType<typeof initState>) {
 
   return { setAuthToken, setLangToken, addUser };
 };
+

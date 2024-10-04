@@ -12,20 +12,41 @@ export class ARepository {
   ) {
     this._domen =
       process.env.NODE_ENV === "development"
-        ? "http://localhost:8888"
+        ? "http://localhost:8000"
         : "https://remfy.ru";
   }
 
-  protected async GET() {
-    const config = this.getConfigRequestGet();
-    return axios.get(this.getUrl(), config);
+  protected async GET<T, E>() {
+    try{
+      const config = this.getConfigRequestGet();
+      return axios.get<T>(this.getUrl(), config);
+    } catch(error){
+      if(axios.isAxiosError<E>(error)){
+        return error;
+      } else {
+        console.log('unexpected error: ', error);
+        return {};
+      }
+    }
   }
 
-  protected async POST() {
-    const config = this.getConfig();
-    const data = this.getData();
-    return axios.post(this.getUrl(), data, config);
-  }
+
+  protected async POST<T>(): Promise<AxiosResponse<T>> {
+    try {
+        const config = this.getConfig();
+        const data = this.getData();
+        const response = await axios.post<T>(this.getUrl(), data, config);
+        return response; // Возвращаем объект AxiosResponse<T>
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            throw error;
+        } else {
+            console.log('unexpected error: ', error);
+            throw new Error('Unexpected error occurred');
+        }
+    }
+}
+
 
   protected async PATCH() {
     const config = this.getConfig();
@@ -164,6 +185,31 @@ export class ARepository {
       response: payload.response ?? null,
       ...this.getResultByStatusRequst(payload.response),
     };
+
+    return result;
+  }
+
+  protected generateResponseSuccess<T>(payload: {
+    response?: AxiosResponse<T, any>;
+  }): RepositoryTypes.ResponsePayloadSuccess<T> {
+    const result = {
+      response: payload.response ?? null,
+      status: payload.response?.status ?? 200,
+      result: true,
+    } as RepositoryTypes.ResponsePayloadSuccess<T>;
+
+    return result;
+  }
+
+  protected generateResponseError<T>(payload: {
+    response?: AxiosError<T, any>;
+  }): RepositoryTypes.ResponsePayloadError<T> {
+
+    const result = {
+      response: payload.response ?? null,
+      result: false,
+      status: payload.response?.response?.status ?? 400,
+    } as RepositoryTypes.ResponsePayloadError<T>;
 
     return result;
   }

@@ -36,8 +36,9 @@ export const ruleMinLength = function(value: number){
 }
 
 export const ruleEmail = function(){
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const WORDS = initWords();
-    return getRule((value: string) => getString(value).includes('@') || WORDS.RULES.EMAIL);
+    return getRule((value: string) => emailRegex.test(getString(value)) || WORDS.RULES.EMAIL);
 }
 
 export const ruleNum = function(){
