@@ -190,7 +190,7 @@ export class ARepository {
   }
 
   protected generateResponseSuccess<T>(payload: {
-    response?: AxiosResponse<T, any>;
+    response?: AxiosResponse<RepositoryTypes.ServerResponse<T>, any>;
   }): RepositoryTypes.ResponsePayloadSuccess<T> {
     const result = {
       response: payload.response ?? null,

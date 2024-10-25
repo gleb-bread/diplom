@@ -21,11 +21,11 @@ export class User extends Service{
                 response: response,
 
                 success: async (response) => {
-                    const userDTO = response.response.data;
+                    const userDTO = response.response.data.data;
                     const user = DTOs.UserAuth.toModel(userDTO);
-                    const tokenResponse = new Response(user.token);
+                    const token = user.token
 
-                    await Helper.CacheAPI.setCacheData('token', '/', tokenResponse);
+                    Helper.CookieAPI.setCookie('token', token, 14, {'path': '/', 'sameSite': 'Strict'});
 
                     resolve({
                         status: response.status,

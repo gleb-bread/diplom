@@ -1,6 +1,7 @@
 import * as DTOs from "@/entities/DTOs";
 import * as Repositories from "@/entities/repositories";
 import * as UserRepositoryError from './error';
+import * as ARepositoryTypes from "../ARepository/types";
 
 export class User extends Repositories.ARepository.ARepository {
   constructor(
@@ -12,7 +13,7 @@ export class User extends Repositories.ARepository.ARepository {
   public async addUser() {
     this.URL = 'api/register';
 
-    return this.POST<DTOs.UserAuth.UserAuthDTO>().then(response => {
+    return this.POST<ARepositoryTypes.ServerResponse<DTOs.UserAuth.UserAuthDTO>>().then(response => {
         return this.generateResponseSuccess<DTOs.UserAuth.UserAuthDTO>(
             {
                 'response': response,

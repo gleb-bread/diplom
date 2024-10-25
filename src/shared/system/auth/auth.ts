@@ -2,10 +2,8 @@ import { useUserStore } from "@/app/stores/user";
 import { Helper } from "@/shared/helpers";
 
 export const checkAuth = async function () {
-  const cachedResponse = await Helper.CacheAPI.getCacheData('token', '/');
+  const token = Helper.CookieAPI.getCookie('token');
   const userStore = useUserStore();
-
-  const token = await cachedResponse?.text();
   
   console.log(token);
 
