@@ -10,7 +10,7 @@ export class User extends Repositories.ARepository.ARepository {
   }
 
   public async addUser() {
-    this.URL = '/api/register';
+    this.URL = 'api/register';
 
     return this.POST<DTOs.UserAuth.UserAuthDTO>().then(response => {
         return this.generateResponseSuccess<DTOs.UserAuth.UserAuthDTO>(
