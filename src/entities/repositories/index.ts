@@ -1,2 +1,2 @@
-export * as ARepository from "./ARepository";
-export {User} from './user';
+export * as ARepository from './ARepository';
+export { Registration, User } from './user';

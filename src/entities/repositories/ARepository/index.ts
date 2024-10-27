@@ -1,2 +1,3 @@
-export { ARepository } from "./ARepository";
-export * as RepositoryTypes from "./types";
+export { ARepository } from './ARepository';
+export { ARepositorySecurity } from './ARepository';
+export * as RepositoryTypes from './types';
