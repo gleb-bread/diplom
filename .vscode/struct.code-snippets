@@ -1,0 +1,181 @@
+{
+    // Place your snippets for typescript here. Each snippet is defined under a snippet name and has a prefix, body and
+    // description. The prefix is what is used to trigger the snippet and the body will be expanded and inserted. Possible variables are:
+    // $1, $2 for tab stops, $0 for the final cursor position, and ${1:label}, ${2:another} for placeholders. Placeholders with the
+    // same ids are connected.
+    // Example:
+    // "Print to console": {
+    // 	"prefix": "log",
+    // 	"body": [
+    // 		"console.log('$1');",
+    // 		"$2"
+    // 	],
+    // 	"description": "Log output to console"
+    // }
+
+    "Create Model": {
+        "prefix": "nmodel",
+        "body": [
+            "import * as DTOs from '@/entities/DTOs';",
+            "import * as Models from '@/entities/models';",
+            "",
+            "export class $1 extends Models.Model<DTOs.$2> {",
+            "constructor(dto: DTOs.$2) {",
+            "super();",
+            "}",
+            "public getDTO(): DTOs.$2 {",
+            "return {}",
+            "}",
+            "}",
+        ],
+        "description": "Create new Model",
+    },
+
+    "Create DTO": {
+        "prefix": "ndto",
+        "body": [
+            "import * as DTOs from '@/entities/DTOs';",
+            "import * as Models from '@/entities/models';",
+            "",
+            "export type $1DTO = {};",
+            "",
+            "export const toModel = function (dto: $2): Models.$3 {",
+            "return new Models.$4(dto);",
+            "};",
+        ],
+        "description": "Create new DTO",
+    },
+
+    "Create Repository": {
+        "prefix": "nrepository",
+        "body": [
+            "import * as Repositories from '@/entities/repositories';",
+            "import * as DTOs from '@/entities/DTOs';",
+            "",
+            "export class $1Repository extends Repositories.ARepository.ARepository {",
+            "constructor(",
+            "config?: Repositories.ARepository.RepositoryTypes.RepositoryConfig",
+            ") {",
+            "super('/api/$2', config);",
+            "}",
+            "}",
+        ],
+        "description": "Create new Repository",
+    },
+
+    "Create Service": {
+        "prefix": "nservice",
+        "body": [
+            "import * as Models from '@/entities/models';",
+            "import * as Repositories from '@/entities/repositories';",
+            "import * as DTOs from '@/entities/DTOs';",
+            "import { Service } from '../Service';",
+            "import * as ServicesTypes from '@/entities/services/Service/types';",
+            "import * as Types from '@/shared/types';",
+            "",
+            "export class $1Service extends Service {}",
+        ],
+        "description": "Create new Service",
+    },
+
+    "Create State": {
+        "prefix": "istate",
+        "body": [
+            "import { Helper } from '@/shared/helpers';",
+            "import * as Models from '@/entities/models';",
+            "import { ref } from 'vue';",
+            "import * as Types from '@/shared/types';",
+            "",
+            "export const initState = function () {",
+            "return {};",
+            "};",
+        ],
+        "description": "Create new State",
+    },
+
+    "Import Models": {
+        "prefix": "models",
+        "body": ["import * as Models from '@/entities/models';"],
+        "description": "Import models",
+    },
+
+    "Import DTOs": {
+        "prefix": "dtos",
+        "body": ["import * as DTOs from '@/entities/DTOs';"],
+        "description": "Import DTOs",
+    },
+
+    "Import Service": {
+        "prefix": "service",
+        "body": ["import * as Services from '@/entities/services';"],
+        "description": "Import DTOs",
+    },
+
+    "Create Store": {
+        "prefix": "istore",
+        "body": [
+            "import { defineStore } from 'pinia';",
+            "import { initState } from './state';",
+            "import { STORES } from '../stores.enum';",
+            "import { initGetters } from './getters';",
+            "import { initActions } from './actions';",
+            "",
+            "export const use$1Store = defineStore(STORES.$2, () => {",
+            "const state = initState();",
+            "",
+            "const Getters = initGetters(state);",
+            "const Actions = initActions(state);",
+            "",
+            "return {",
+            "...Actions,",
+            "...Getters,",
+            "};",
+            "});",
+        ],
+
+        "description": "Create new Store",
+    },
+
+    "Create Getters": {
+        "prefix": "igetters",
+        "body": [
+            "import { initState } from './state';",
+            "import { Helper } from '@/shared/helpers';",
+            "import { computed } from 'vue';",
+            "",
+            "export const initGetters = function (state: ReturnType<typeof initState>) {",
+            "return {",
+            "};",
+            "};",
+        ],
+
+        "description": "Create new Getters",
+    },
+
+    "Create Actions": {
+        "prefix": "iactions",
+        "body": [
+            "import * as Services from '@/entities/services';",
+            "import { initState } from './state';",
+            "",
+            "export const initActions = function (state: ReturnType<typeof initState>) {",
+            "return {};",
+            "};",
+        ],
+
+        "description": "Create new Actions",
+    },
+
+    "Create Client": {
+        "prefix": "nclient",
+        "body": ["export class $1 {", "constructor() {}", "}"],
+
+        "description": "Create new Client",
+    },
+
+    "Import Clients": {
+        "prefix": "clients",
+        "body": ["import * as Clients from '@/entities/client';"],
+        "description": "Import clients",
+    },
+}

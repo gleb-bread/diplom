@@ -1,7 +1,9 @@
 import { initState } from './state';
 import type { Languages } from '@/shared/system/lang/type';
 import * as UserTemplatesStore from './template';
+import { Helper } from '@/shared/helpers';
 import * as Services from '@/entities/services';
+import { router } from '@/app/router';
 
 export const initActions = function (state: ReturnType<typeof initState>) {
     const setAuthToken = function (token: string) {
@@ -29,13 +31,14 @@ export const initActions = function (state: ReturnType<typeof initState>) {
     const setUserInfo = async function () {
         const service = new Services.User();
 
-        const response = await service.getUser(getUserIdFromToken());
-
-        console.log(response);
-
-        if (response.result) {
-            state.userInfo.value = response.data;
-        }
+        service
+            .getUser(getUserIdFromToken())
+            .then((response) => {
+                state.userInfo.value = response.data;
+            })
+            .catch((response) => {
+                Helper.RouterAPI.redirect(router, 'LOGIN');
+            });
     };
 
     const getUserIdFromToken = function () {

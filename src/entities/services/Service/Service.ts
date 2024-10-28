@@ -3,30 +3,38 @@ import * as ARepositoryTypes from '@/entities/repositories/ARepository/types';
 
 export class Service {
     protected getCacheObject<T, K extends keyof T>(array: T[], keyCache: K) {
-        return array.reduce((obj, value) => {
-            const key = value[keyCache];
-            if (
-                typeof key === 'string' ||
-                typeof key === 'number' ||
-                typeof key === 'symbol'
-            ) {
-                obj[key] = value;
-            }
-            return obj;
-        }, {} as ServiceTypes.ServiceCacheObj<T, K>);
+        return array.reduce(
+            (obj, value) => {
+                const key = value[keyCache];
+                if (
+                    typeof key === 'string' ||
+                    typeof key === 'number' ||
+                    typeof key === 'symbol'
+                ) {
+                    obj[key] = value;
+                }
+                return obj;
+            },
+            {} as ServiceTypes.ServiceCacheObj<T, K>
+        );
     }
 
     protected getIndexList<T, K extends keyof T>(array: T[], keyCache: K) {
-        return array.reduce((list, value) => {
-            const key = value[keyCache];
-            list.push(key);
-            return list;
-        }, [] as Array<T[K]>);
+        return array.reduce(
+            (list, value) => {
+                const key = value[keyCache];
+                list.push(key);
+                return list;
+            },
+            [] as Array<T[K]>
+        );
     }
 
-    protected validateRequest<T, E>(payload: ServiceTypes.ValidatePayload<T, E>) {
+    protected validateRequest<T, E>(
+        payload: ServiceTypes.ValidatePayload<T, E>
+    ) {
         try {
-            if (!(payload.response.result)) {
+            if (!payload.response.result) {
                 console.error(payload.response);
                 payload.error(payload.response);
             } else {
