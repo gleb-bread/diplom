@@ -3,6 +3,7 @@ import * as Repositories from '@/entities/repositories';
 import * as RegistrationError from './error';
 import * as ARepositoryTypes from '@/entities/repositories/ARepository/types';
 import { PREFIX } from '@/entities/repositories/prefix.enum';
+import * as RegistrationTypes from './types';
 
 export class Registration extends Repositories.ARepository.ARepository {
     constructor(
@@ -13,10 +14,10 @@ export class Registration extends Repositories.ARepository.ARepository {
 
     public async addUser() {
         return this.POST<
-            ARepositoryTypes.ServerResponse<DTOs.UserAuth.UserAuthDTO>
+            ARepositoryTypes.ServerResponse<RegistrationTypes.RegistrationDTO>
         >()
             .then((response) => {
-                return this.generateResponseSuccess<DTOs.UserAuth.UserAuthDTO>({
+                return this.generateResponseSuccess({
                     response: response,
                 });
             })

@@ -1,10 +1,10 @@
-import { router as Router } from "./router";
-import { initChooks } from "./chooks";
+import { router } from './router';
+import { initChooks } from './chooks';
 
 const initRouter = function () {
-  initChooks(Router);
+    initChooks(router);
 
-  return { router: Router };
+    return { Router: router };
 };
 
-export const { router } = initRouter();
+export const { Router } = initRouter();

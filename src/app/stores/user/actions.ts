@@ -3,7 +3,7 @@ import type { Languages } from '@/shared/system/lang/type';
 import * as UserTemplatesStore from './template';
 import { Helper } from '@/shared/helpers';
 import * as Services from '@/entities/services';
-import { router } from '@/app/router';
+import { useRouter } from 'vue-router';
 
 export const initActions = function (state: ReturnType<typeof initState>) {
     const setAuthToken = function (token: string) {
@@ -18,11 +18,12 @@ export const initActions = function (state: ReturnType<typeof initState>) {
         const service = new Services.User();
 
         const response = await service.addUser(state.newUser.value);
+        const router = useRouter();
 
         if (response.result) {
             state.userInfo.value = response.data.user;
             restoreNewUser();
-            return { success: true };
+            Helper.RouterAPI.redirect(router, 'PAGE');
         } else {
             return { success: false, data: {} };
         }
@@ -30,21 +31,16 @@ export const initActions = function (state: ReturnType<typeof initState>) {
 
     const setUserInfo = async function () {
         const service = new Services.User();
+        const router = useRouter();
 
         service
-            .getUser(getUserIdFromToken())
+            .getUser()
             .then((response) => {
                 state.userInfo.value = response.data;
             })
             .catch((response) => {
                 Helper.RouterAPI.redirect(router, 'LOGIN');
             });
-    };
-
-    const getUserIdFromToken = function () {
-        const token = state.authToken.value;
-        const id = Number(token.split('|')[0]);
-        return !isNaN(id) ? id : 0;
     };
 
     const restoreNewUser = function () {

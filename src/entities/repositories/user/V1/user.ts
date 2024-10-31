@@ -10,10 +10,26 @@ export class User extends Repositories.ARepository.ARepositorySecurity {
         super(`${PREFIX.V1}/user`, config);
     }
 
-    public async getUser(id: number) {
-        this.addParamsInConfig({ id: id });
-
+    public async getUser() {
         return this.GET<ARepositoryTypes.ServerResponse<DTOs.User.UserDTO>>()
+            .then((response) => {
+                return this.generateResponseSuccess({
+                    response: response,
+                });
+            })
+            .catch((response) => {
+                return this.generateResponseError({
+                    response: response,
+                });
+            });
+    }
+
+    public async getProjects() {
+        this.addParamsInConfig({ path: 'project' });
+
+        return this.GET<
+            ARepositoryTypes.ServerResponse<DTOs.Project.ProjectDTO[]>
+        >()
             .then((response) => {
                 return this.generateResponseSuccess({
                     response: response,

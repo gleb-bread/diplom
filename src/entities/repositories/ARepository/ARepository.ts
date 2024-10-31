@@ -15,7 +15,7 @@ export class ARepository {
     ) {
         this._domen =
             process.env.NODE_ENV === 'development'
-                ? 'http://localhost:8004'
+                ? 'http://localhost:8000'
                 : 'https://remfy.ru';
 
         this._config = { ...this._config, ...config };
