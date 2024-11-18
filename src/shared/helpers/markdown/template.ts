@@ -1,8 +1,8 @@
 import * as MarkdownTypes from './types';
 
-export const ClassOptions = function (): MarkdownTypes.ClassOptions {
+export const ClassOptions = function (): Required<MarkdownTypes.ClassOptions> {
     return {
-        font: null,
+        font: '',
         default: 'diplim',
         h1: 'diplim_h1',
         h2: 'diplim_h2',
@@ -17,20 +17,17 @@ export const ClassOptions = function (): MarkdownTypes.ClassOptions {
         unordered_list: 'diplim_unordered_list',
         ordered_list: 'diplim_ordered_list',
         link: 'diplim_link',
-        link_with_title: 'diplim_link_with_title',
         image: 'diplim_image',
-        image_with_title: 'diplim_image_with_title',
-        inline_code: 'diplim_inline_code',
-        code_block: 'diplim_code_block',
+        code: 'diplim_inline_code',
+        code_multiline: 'diplim_code_block',
         quote: 'diplim_quote',
-        horizontal_line: 'diplim_horizontal_line',
-        task_list: 'diplim_task_list',
-        task_list_item: 'diplim_list_item',
-        text_style_list: null,
+        list_item: 'diplim_list_item',
+        text_style_list: '',
+        backslash: '',
     };
 };
 
-export const TagOptions = function (): MarkdownTypes.TagOptions {
+export const TagOptions = function (): Required<MarkdownTypes.TagOptions> {
     return {
         h1: 'h1',
         h2: 'h2',
@@ -47,33 +44,60 @@ export const TagOptions = function (): MarkdownTypes.TagOptions {
         link: 'a',
         image: 'img',
         code: 'code',
+        code_multiline: 'code',
         quote: 'blockquote',
         list_item: 'li',
         text_style_list: 'style',
+        backslash: 'backslash',
     };
 };
 
-// TODO сделаь нормально
-
-export const SimbolOptions = function (): MarkdownTypes.TagOptions {
-    return {
-        h1: '#',
-        h2: '##',
-        h3: '###',
-        h4: '####',
-        h5: '#####',
-        h6: '######',
-        italic: '*',
-        bold: '**',
-        underlined: '~~',
-        strikethrough: '~~~',
-        unordered_list: '-',
-        ordered_list: '.',
-        link: '[',
-        image: '![',
-        code: '`',
-        quote: '>',
-        list_item: '.',
-        text_style_list: '>>>',
+export const SimbolOptionsStart =
+    function (): Required<MarkdownTypes.SimbolOptions> {
+        return {
+            h1: '#',
+            h2: '##',
+            h3: '###',
+            h4: '####',
+            h5: '#####',
+            h6: '######',
+            italic: '*',
+            bold: '**',
+            underlined: '~~',
+            strikethrough: '~~~',
+            unordered_list: '-',
+            ordered_list: /^\d+\.$/,
+            link: '[',
+            image: '![',
+            code: '`',
+            code_multiline: '```',
+            quote: '>',
+            text_style_list: '>>>',
+            backslash: '\\',
+        };
     };
-};
+
+export const SimbolOptionsEnd =
+    function (): Required<MarkdownTypes.SimbolOptions> {
+        return {
+            h1: '\n',
+            h2: '\n',
+            h3: '\n',
+            h4: '\n',
+            h5: '\n',
+            h6: '\n',
+            italic: '*',
+            bold: '**',
+            underlined: '~~',
+            strikethrough: '~~~',
+            unordered_list: '\n',
+            ordered_list: '\n',
+            link: ')',
+            image: ')',
+            code: /[`]|[\n]/,
+            code_multiline: '```',
+            quote: '\n',
+            text_style_list: '<<<',
+            backslash: '',
+        };
+    };
