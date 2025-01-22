@@ -81,12 +81,11 @@ export type MarkdownConfig = {
 };
 
 export type MarkdownElement = {
-    value: string;
     tag: string;
     tagItem?: string;
     class: string;
-    elemnts?: MarkdownElement[];
-    end: boolean;
+    elemnts: MarkdownElement[];
+    endSimbol: string | RegExp;
 };
 
-export type MapMarkdownElement = { [key: string]: MarkdownElement };
+export type MapMarkdownElement = Record<string, () => MarkdownElement>;

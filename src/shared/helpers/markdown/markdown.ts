@@ -6,11 +6,9 @@ export class Markdown {
     private _classes: MarkdownTypes.ClassOptions;
     private _simbol_start: MarkdownTypes.SimbolOptions;
     private _simbol_end: MarkdownTypes.SimbolOptions;
-    private _input: string = '';
-    private _output: string = '';
     private _markdown_elements: MarkdownTypes.MarkdownElement[] = [];
-    private _map_start_markdown_elements: MarkdownTypes.MapMarkdownElement = {};
-    private _map_end_markdown_elements: MarkdownTypes.MapMarkdownElement = {};
+    private _map_markdown_elements: MarkdownTypes.MapMarkdownElement = {};
+    private _markdown_spec_simbol: string = '';
 
     constructor(config?: MarkdownTypes.MarkdownConfig) {
         this._classes = {
@@ -32,113 +30,144 @@ export class Markdown {
             ...(config?.simbol_end ?? {}),
         };
 
-        this._input = config?.input ?? '';
+        this.genericMapMarkdownElement();
 
-        this.genericMapMarkdownStartElement();
-        this.genericMapMarkdownEndElement();
+        return this;
     }
 
-    private getHTML() {
+    public getHTML(input: string) {
         let result = '';
 
-        this._input.split('').forEach((v) => {
-            this.handlerSimbol(v);
-            const firstElem = this._markdown_elements[0];
-            if(!firstElem) result += v;
-            if(firstElem.end) result += ;
+        const text = input.split('');
+
+        text.forEach((v, index) => {
+            let str = this.handlerSimbol(v);
+            result += str;
+            const lastElement = this.getLastElement();
+            if (!!lastElement && index === text.length - 1)
+                result += this.generateEndHTMLTag(lastElement);
         });
+
+        return result;
     }
 
-    private getFirstElemStr(){
-        const firstElem = this.getFirstElem();
-        if()
-    }
-
-    private genericMapMarkdownStartElement() {
+    private genericMapMarkdownElement() {
         let mapping: MarkdownTypes.MapMarkdownElement = {};
+
         Object.keys(this._simbol_start).forEach((k) => {
             const key = k as keyof MarkdownTypes.SimbolOptions;
 
-            mapping[key] = {
-                class: this._classes[key] ?? '',
-                tag: this._tags[key] ?? '',
-                value: '',
-                end: false,
-            };
+            if (
+                this._simbol_end[key] === undefined ||
+                this._simbol_end[key] === null
+            )
+                throw Error(`Not define end tag or Regex on ${key}`);
+
+            const startSymbol =
+                this._simbol_start[key] instanceof RegExp
+                    ? this._simbol_start[key].source // Преобразование RegExp в строку
+                    : this._simbol_start[key];
+
+            if (startSymbol)
+                mapping[startSymbol] = () => {
+                    return {
+                        class: this._classes[key] ?? '',
+                        tag: this._tags[key] ?? '',
+                        endSimbol: this._simbol_end[key],
+                        elemnts: [],
+                    } as MarkdownTypes.MarkdownElement;
+                };
         });
 
-        mapping['unordered_list'].tagItem = this._tags.list_item;
-        mapping['ordered_list'].tagItem = this._tags.list_item;
+        // const unorderedListKey =
+        //     this._simbol_start['unordered_list'] instanceof RegExp
+        //         ? this._simbol_start['unordered_list'].source // Преобразование RegExp в строку
+        //         : this._simbol_start['unordered_list'];
 
-        this._map_start_markdown_elements = mapping;
+        // const orderedListKey =
+        //     this._simbol_start['ordered_list'] instanceof RegExp
+        //         ? this._simbol_start['ordered_list'].source // Преобразование RegExp в строку
+        //         : this._simbol_start['ordered_list'];
+
+        // if (unorderedListKey)
+        //     mapping[unorderedListKey]().tagItem = this._tags.list_item;
+        // if (orderedListKey)
+        //     mapping[orderedListKey]().tagItem = this._tags.list_item;
+
+        this._map_markdown_elements = mapping;
     }
 
-    private genericMapMarkdownEndElement() {
-        let mapping: MarkdownTypes.MapMarkdownElement = {};
-        Object.keys(this._simbol_end).forEach((k) => {
-            const key = k as keyof MarkdownTypes.SimbolOptions;
+    private getLastElement() {
+        if (!this._markdown_elements.length) return null;
 
-            mapping[key] = {
-                class: this._classes[key] ?? '',
-                tag: this._tags[key] ?? '',
-                value: '',
-                end: false,
-            };
-        });
+        let lastElement =
+            this._markdown_elements[this._markdown_elements.length - 1];
 
-        mapping['unordered_list'].tagItem = this._tags.list_item;
-        mapping['ordered_list'].tagItem = this._tags.list_item;
+        let isLast = false;
 
-        this._map_end_markdown_elements = mapping;
-    }
-
-    private getNewMarkdownElement(v: string) {
-        return this._map_start_markdown_elements[v] ?? null;
-    }
-
-    private getEndMarkdownElement(v: string) {
-        return this._map_end_markdown_elements[v] ?? null;
-    }
-
-    private getFirstElem() {
-        let elem = this._markdown_elements[0];
-        let isEnd = elem ? true : false;
-
-        while (isEnd) {
-            let deepElem = elem.elemnts?.[0];
-            if (!deepElem) {
-                isEnd = false;
+        do {
+            if (!lastElement.elemnts?.length) {
+                isLast = true;
             } else {
-                elem = deepElem;
+                lastElement =
+                    lastElement.elemnts[lastElement.elemnts.length - 1];
             }
-        }
+        } while (!isLast);
 
-        return elem;
+        return lastElement;
     }
 
     private handlerSimbol(v: string) {
-        const newElem = this.getNewMarkdownElement(v);
-        const endElem = this.getEndMarkdownElement(v);
-        const firstElem = this.getFirstElem();
+        const lastElement = this.getLastElement();
 
-        if (newElem.tag === firstElem.tag) {
-            firstElem.end = true;
-        } else if (firstElem) {
-            if (!firstElem.elemnts) {
-                firstElem.elemnts = [newElem];
-            } else {
-                firstElem.elemnts.unshift(newElem);
-            }
-        } else {
-            this._markdown_elements.unshift(newElem);
+        let str = '';
+
+        if (!!lastElement && lastElement.endSimbol === v) {
+            return this.generateEndHTMLTag(lastElement);
         }
 
-        if (!newElem) {
-            if (endElem) {
-                firstElem.end = true;
-            } else {
-                firstElem.value = firstElem.value + v;
+        if (!this.checkMarkdownKey(v)) {
+            let newElement =
+                this._map_markdown_elements[this._markdown_spec_simbol];
+
+            if (newElement?.()) {
+                if (!lastElement) {
+                    this._markdown_elements.push(newElement());
+                } else {
+                    lastElement.elemnts.push(newElement());
+                }
+
+                str += this.generateStartHTMLTag(newElement());
             }
+
+            str += v;
+
+            this._markdown_spec_simbol = '';
+
+            return str;
+        }
+
+        return '';
+    }
+
+    private generateEndHTMLTag(element: MarkdownTypes.MarkdownElement) {
+        return `</${element.tag}>`;
+    }
+
+    private generateStartHTMLTag(element: MarkdownTypes.MarkdownElement) {
+        return `<${element.tag} class=${element.class}">`;
+    }
+
+    private checkMarkdownKey(symbol: string) {
+        const totalSimbol = this._markdown_spec_simbol + symbol;
+
+        const newElement = this._map_markdown_elements[symbol]?.();
+
+        if (newElement) {
+            this._markdown_spec_simbol = totalSimbol;
+            return true;
+        } else {
+            return false;
         }
     }
 }
