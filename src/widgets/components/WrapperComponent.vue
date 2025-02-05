@@ -19,8 +19,6 @@ const handlerHoverComponentWrapper = new Handlers.HoverComponent(
     props.componentId
 );
 
-const handlerLeaveComponentWrapper = new Handlers.LeaveComponent();
-
 const componentStore = useComponentStore();
 
 const handlerCreateComponent = new Handlers.CreateNewComponent(props.pageId);
@@ -40,37 +38,39 @@ const getFocus = computed({
 
 <template>
     <v-hover :model-value="getFocus">
-        <v-responsive
-            @click="
-                $ACTION_MANAGER.pushAction(
-                    new Actions.Click.ClickAction(
-                        $event,
-                        config,
-                        handlerHoverComponentWrapper
-                    )
-                )
-            "
-            min-height="62"
-            class="py-4"
-            v-bind="props"
-        >
-            <div class="wrapper tran-all tran-3 h-100 d-flex align-center">
-                <icons-block :is-hovering="getFocus"></icons-block>
-                <div
-                    class="main h-100 w-100"
-                    @keyup="
-                        $ACTION_MANAGER.pushAction(
-                            new Actions.Keyboard.Keyup.KeyupAction(
-                                $event,
-                                config,
-                                handlerCreateComponent
-                            )
+        <template #default="{ isHovering, props }">
+            <v-responsive
+                @click="
+                    $ACTION_MANAGER.pushAction(
+                        new Actions.Click.ClickAction(
+                            $event,
+                            config,
+                            handlerHoverComponentWrapper
                         )
-                    "
-                >
-                    <slot :is-hovering="getFocus"></slot>
+                    )
+                "
+                min-height="62"
+                class="py-4"
+                v-bind="props"
+            >
+                <div class="wrapper tran-all tran-3 h-100 d-flex align-center">
+                    <icons-block :is-hovering="isHovering"></icons-block>
+                    <div
+                        class="main h-100 w-100"
+                        @keyup="
+                            $ACTION_MANAGER.pushAction(
+                                new Actions.Keyboard.Keyup.KeyupAction(
+                                    $event,
+                                    config,
+                                    handlerCreateComponent
+                                )
+                            )
+                        "
+                    >
+                        <slot :is-hovering="getFocus"></slot>
+                    </div>
                 </div>
-            </div>
-        </v-responsive>
+            </v-responsive>
+        </template>
     </v-hover>
 </template>
