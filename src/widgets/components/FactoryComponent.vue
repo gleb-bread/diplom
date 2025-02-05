@@ -16,7 +16,7 @@ const component = computed(
 <template>
     <wrapper-component v-bind="props">
         <template #default="{ isHovering }">
-            <v-textarea v-model="component.text" v-if="isHovering">
+            <v-textarea autofocus v-model="component.text" v-if="isHovering">
             </v-textarea>
             <div
                 v-else

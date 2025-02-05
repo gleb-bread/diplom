@@ -41,21 +41,12 @@ const getFocus = computed({
 <template>
     <v-hover :model-value="getFocus">
         <v-responsive
-            @mouseover="
+            @click="
                 $ACTION_MANAGER.pushAction(
-                    new Actions.Mouse.Mouseover.MouseoverAction(
+                    new Actions.Click.ClickAction(
                         $event,
                         config,
                         handlerHoverComponentWrapper
-                    )
-                )
-            "
-            @mouseleave="
-                $ACTION_MANAGER.pushAction(
-                    new Actions.Mouse.Mouseleave.MouseleaveAction(
-                        $event,
-                        config,
-                        handlerLeaveComponentWrapper
                     )
                 )
             "
