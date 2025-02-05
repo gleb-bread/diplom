@@ -85,6 +85,7 @@ export type MarkdownElement = {
     tagItem?: string;
     class: string;
     elemnts: MarkdownElement[];
+    end: boolean;
     endSimbol: string | RegExp;
 };
 

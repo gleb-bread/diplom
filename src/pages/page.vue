@@ -12,10 +12,6 @@ const getSelectPage = computed(() => pageStore.getSelectPage);
 const getComponentIds = computed(
     () => componentStore.getGenericList[getSelectPage.value]
 );
-
-const getComponent = computed(
-    () => (id: number) => componentStore.getComponents[getSelectPage.value][id]
-);
 </script>
 
 <template>

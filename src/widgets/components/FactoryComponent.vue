@@ -14,8 +14,14 @@ const component = computed(
 </script>
 
 <template>
-    <wrapper-component>
-        <v-text-field class="w-100" v-model="component.text"> </v-text-field>
-        <div v-html="new Helper.Markdown().getHTML(component.text)"></div>
+    <wrapper-component v-bind="props">
+        <template #default="{ isHovering }">
+            <v-textarea v-model="component.text" v-if="isHovering">
+            </v-textarea>
+            <div
+                v-else
+                v-html="new Helper.Markdown().getHTML(component.text)"
+            ></div>
+        </template>
     </wrapper-component>
 </template>

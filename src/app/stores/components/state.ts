@@ -14,5 +14,14 @@ export const initState = function () {
         Number(Helper.CookieAPI.getCookie(Env.Cookie.page) ?? 0)
     );
 
-    return { components, genericList, selectPage };
+    const lastIndexNewComponent = ref(0);
+    const focusComponent = ref<null | number>(null);
+
+    return {
+        components,
+        genericList,
+        selectPage,
+        lastIndexNewComponent,
+        focusComponent,
+    };
 };

@@ -74,6 +74,7 @@ export class Markdown {
                         class: this._classes[key] ?? '',
                         tag: this._tags[key] ?? '',
                         endSimbol: this._simbol_end[key],
+                        end: false,
                         elemnts: [],
                     } as MarkdownTypes.MarkdownElement;
                 };
@@ -103,14 +104,27 @@ export class Markdown {
         let lastElement =
             this._markdown_elements[this._markdown_elements.length - 1];
 
+        if (lastElement.end) return null;
+
         let isLast = false;
 
         do {
             if (!lastElement.elemnts?.length) {
                 isLast = true;
             } else {
-                lastElement =
-                    lastElement.elemnts[lastElement.elemnts.length - 1];
+                isLast = true;
+
+                for (let i = 1; i <= lastElement.elemnts.length; i++) {
+                    const element =
+                        lastElement.elemnts[lastElement.elemnts.length - i];
+                    if (!element.end) {
+                        lastElement =
+                            lastElement.elemnts[lastElement.elemnts.length - 1];
+
+                        isLast = false;
+                        break;
+                    }
+                }
             }
         } while (!isLast);
 
@@ -120,37 +134,47 @@ export class Markdown {
     private handlerSimbol(v: string) {
         const lastElement = this.getLastElement();
 
+        const checkSpecSimbol = this.checkMarkdownKey(v);
+
         let str = '';
 
-        if (!!lastElement && lastElement.endSimbol === v) {
-            return this.generateEndHTMLTag(lastElement);
+        if (
+            !!lastElement &&
+            (lastElement.endSimbol === this._markdown_spec_simbol ||
+                lastElement.endSimbol === v)
+        ) {
+            let str = this.generateEndHTMLTag(lastElement);
+
+            return str;
         }
 
-        if (!this.checkMarkdownKey(v)) {
+        if (!checkSpecSimbol) {
             let newElement =
                 this._map_markdown_elements[this._markdown_spec_simbol];
 
             if (newElement?.()) {
+                let NElement = newElement();
+
                 if (!lastElement) {
-                    this._markdown_elements.push(newElement());
+                    this._markdown_elements.push(NElement);
                 } else {
-                    lastElement.elemnts.push(newElement());
+                    lastElement.elemnts.push(NElement);
                 }
 
-                str += this.generateStartHTMLTag(newElement());
+                str += this.generateStartHTMLTag(NElement);
             }
-
-            str += v;
 
             this._markdown_spec_simbol = '';
 
-            return str;
+            if (!this.checkMarkdownKey(v)) return str + v;
+            else return str;
         }
 
         return '';
     }
 
     private generateEndHTMLTag(element: MarkdownTypes.MarkdownElement) {
+        element.end = true;
         return `</${element.tag}>`;
     }
 
@@ -161,7 +185,7 @@ export class Markdown {
     private checkMarkdownKey(symbol: string) {
         const totalSimbol = this._markdown_spec_simbol + symbol;
 
-        const newElement = this._map_markdown_elements[symbol]?.();
+        const newElement = this._map_markdown_elements[totalSimbol]?.();
 
         if (newElement) {
             this._markdown_spec_simbol = totalSimbol;
