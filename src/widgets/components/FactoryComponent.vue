@@ -18,10 +18,7 @@ const component = computed(
         <template #default="{ isHovering }">
             <v-textarea autofocus v-model="component.text" v-if="isHovering">
             </v-textarea>
-            <div
-                v-else
-                v-html="new Helper.Markdown().getHTML(component.text)"
-            ></div>
+            <div v-else v-html="$MARKDOWN.getHTML(component.text)"></div>
         </template>
     </wrapper-component>
 </template>

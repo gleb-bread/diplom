@@ -9,6 +9,8 @@ export class Markdown {
     private _markdown_elements: MarkdownTypes.MarkdownElement[] = [];
     private _map_markdown_elements: MarkdownTypes.MapMarkdownElement = {};
     private _markdown_spec_simbol: string = '';
+    private _map_markdown_spec_simbols: MarkdownTypes.MapMarkdownSpecSimbols =
+        {};
 
     constructor(config?: MarkdownTypes.MarkdownConfig) {
         this._classes = {
@@ -36,14 +38,25 @@ export class Markdown {
     }
 
     public getHTML(input: string) {
+        this._markdown_elements = [];
+
         let result = '';
 
-        const text = input.split('');
+        const text = input.trim().split('');
 
         text.forEach((v, index) => {
             let str = this.handlerSimbol(v);
             result += str;
             const lastElement = this.getLastElement();
+            if (v == '~')
+                console.log(index === text.length - 1, text[text.length - 1]);
+            if (
+                Boolean(this._markdown_spec_simbol) &&
+                index === text.length - 1
+            ) {
+                result += this._markdown_spec_simbol;
+            }
+
             if (!!lastElement && index === text.length - 1)
                 result += this.generateEndHTMLTag(lastElement);
         });
@@ -68,7 +81,7 @@ export class Markdown {
                     ? this._simbol_start[key].source // Преобразование RegExp в строку
                     : this._simbol_start[key];
 
-            if (startSymbol)
+            if (startSymbol) {
                 mapping[startSymbol] = () => {
                     return {
                         class: this._classes[key] ?? '',
@@ -78,22 +91,35 @@ export class Markdown {
                         elemnts: [],
                     } as MarkdownTypes.MarkdownElement;
                 };
+
+                if (!this._map_markdown_spec_simbols[startSymbol]) {
+                    this._map_markdown_spec_simbols[startSymbol] = true;
+
+                    const complexSpecSimbol = startSymbol.split('');
+
+                    complexSpecSimbol.forEach((item) => {
+                        if (!this._map_markdown_spec_simbols[item]) {
+                            this._map_markdown_spec_simbols[item] = true;
+                        }
+                    });
+                }
+            }
         });
 
-        // const unorderedListKey =
-        //     this._simbol_start['unordered_list'] instanceof RegExp
-        //         ? this._simbol_start['unordered_list'].source // Преобразование RegExp в строку
-        //         : this._simbol_start['unordered_list'];
+        const unorderedListKey =
+            this._simbol_start['unordered_list'] instanceof RegExp
+                ? this._simbol_start['unordered_list'].source // Преобразование RegExp в строку
+                : this._simbol_start['unordered_list'];
 
-        // const orderedListKey =
-        //     this._simbol_start['ordered_list'] instanceof RegExp
-        //         ? this._simbol_start['ordered_list'].source // Преобразование RegExp в строку
-        //         : this._simbol_start['ordered_list'];
+        const orderedListKey =
+            this._simbol_start['ordered_list'] instanceof RegExp
+                ? this._simbol_start['ordered_list'].source // Преобразование RegExp в строку
+                : this._simbol_start['ordered_list'];
 
-        // if (unorderedListKey)
-        //     mapping[unorderedListKey]().tagItem = this._tags.list_item;
-        // if (orderedListKey)
-        //     mapping[orderedListKey]().tagItem = this._tags.list_item;
+        if (unorderedListKey)
+            mapping[unorderedListKey]().tagItem = this._tags.list_item;
+        if (orderedListKey)
+            mapping[orderedListKey]().tagItem = this._tags.list_item;
 
         this._map_markdown_elements = mapping;
     }
@@ -162,11 +188,13 @@ export class Markdown {
                 }
 
                 str += this.generateStartHTMLTag(NElement);
+            } else {
+                str += this._markdown_spec_simbol;
             }
 
             this._markdown_spec_simbol = '';
 
-            if (!this.checkMarkdownKey(v)) return str + v;
+            if (!checkSpecSimbol) return str + v;
             else return str;
         }
 
@@ -175,6 +203,7 @@ export class Markdown {
 
     private generateEndHTMLTag(element: MarkdownTypes.MarkdownElement) {
         element.end = true;
+        this._markdown_spec_simbol = '';
         return `</${element.tag}>`;
     }
 
@@ -185,9 +214,9 @@ export class Markdown {
     private checkMarkdownKey(symbol: string) {
         const totalSimbol = this._markdown_spec_simbol + symbol;
 
-        const newElement = this._map_markdown_elements[totalSimbol]?.();
+        const result = this._map_markdown_spec_simbols[totalSimbol];
 
-        if (newElement) {
+        if (result) {
             this._markdown_spec_simbol = totalSimbol;
             return true;
         } else {

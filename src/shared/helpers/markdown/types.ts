@@ -90,3 +90,5 @@ export type MarkdownElement = {
 };
 
 export type MapMarkdownElement = Record<string, () => MarkdownElement>;
+
+export type MapMarkdownSpecSimbols = Record<string, boolean>;
