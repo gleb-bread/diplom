@@ -1,10 +1,10 @@
 import type { App } from 'vue';
-import { Markdown } from '@/shared/helpers/markdown';
+import { Helper } from '@/shared/helpers';
 import { GlobalProperties } from '@/plugins/globalProperties.enum';
 import { useSettingsStore } from '@/app/stores/settings';
 
 export const __init__markdown__ = function (app: App) {
-    const markdown = new Markdown();
+    const markdown = new Helper.Markdown.DefaultMarkdown();
     const settingsStore = useSettingsStore();
 
     app.config.globalProperties[GlobalProperties.$MARKDOWN] = markdown;

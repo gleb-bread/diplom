@@ -3,7 +3,7 @@ import { CacheAPI } from './cache';
 import { RulesAPI } from './rules';
 import { CookieAPI } from './cookie';
 import { UrlAPI } from './url';
-import { Markdown } from './markdown';
+import * as Markdown from './markdown';
 
 export const Helper = {
     RouterAPI,
