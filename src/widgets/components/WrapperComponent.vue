@@ -67,7 +67,7 @@ const getFocus = computed({
                             )
                         "
                     >
-                        <slot :is-hovering="getFocus"></slot>
+                        <slot :is-active="getFocus"></slot>
                     </div>
                 </div>
             </v-responsive>

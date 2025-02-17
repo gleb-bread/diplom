@@ -1,207 +1,87 @@
-import { AConfig } from '../Config/AConfig';
+import type { AHandler as AHandlerSimbol } from '../SimbolHandlers/AHandler';
 import * as MarkdownTypes from '../types';
 import { AHandler } from './AHandler';
 
 export class DefaultHandler extends AHandler {
-    protected _markdown_elements: MarkdownTypes.MarkdownElement[] = [];
-    protected _map_markdown_elements: MarkdownTypes.MapMarkdownElement = {};
-    protected _markdown_spec_simbol: string = '';
-    protected _map_markdown_spec_simbols: MarkdownTypes.MapMarkdownSpecSimbols =
-        {};
-    protected _config: AConfig;
+    protected _handlers: AHandlerSimbol[];
+    protected _map_spec_simbols: MarkdownTypes.MarkdownSpecsimbols = {};
+    protected _map_handlers: MarkdownTypes.MapMarkdownSimbolHandlers = {};
+    protected _lastType: MarkdownTypes.MarkdownElementTypes | null = null;
 
-    constructor(config: AConfig) {
+    constructor(...handlers: AHandlerSimbol[]) {
         super();
 
-        this._config = config;
+        this._handlers = handlers;
 
-        this.genericMapMarkdownElement();
+        this.getMaps();
     }
 
     public getHTML(input: string) {
-        this._markdown_elements = [];
-
         let result = '';
 
         const text = input.trim().split('');
 
         text.forEach((v, index) => {
             let str = this.handlerSimbol(v);
+
             result += str;
-            const lastElement = this.getLastElement();
-            if (v == '~')
-                console.log(index === text.length - 1, text[text.length - 1]);
-            if (
-                Boolean(this._markdown_spec_simbol) &&
-                index === text.length - 1
-            ) {
-                result += this._markdown_spec_simbol;
+            if (index === text.length - 1 && !(this._lastType === null)) {
+                result +=
+                    this._map_handlers[this._lastType].handlerSimbol('', true)
+                        ?.text ?? '';
+            } else if (index === text.length - 1 && !this._lastType) {
+                result += v;
             }
 
-            if (!!lastElement && index === text.length - 1)
-                result += this.generateEndHTMLTag(lastElement);
+            if (index === text.length - 1) {
+                this._lastType = null;
+            }
         });
 
         return result;
     }
 
-    private genericMapMarkdownElement() {
-        let mapping: MarkdownTypes.MapMarkdownElement = {};
-
-        Object.keys(this._config.simbol_start).forEach((k) => {
-            const key = k as keyof MarkdownTypes.SimbolOptions;
-
-            if (
-                this._config.simbol_end[key] === undefined ||
-                this._config.simbol_end[key] === null
-            )
-                throw Error(`Not define end tag or Regex on ${key}`);
-
-            const startSymbol =
-                this._config.simbol_start[key] instanceof RegExp
-                    ? this._config.simbol_start[key].source // Преобразование RegExp в строку
-                    : this._config.simbol_start[key];
-
-            if (startSymbol) {
-                mapping[startSymbol] = () => {
-                    return {
-                        class: this._config.classes[key] ?? '',
-                        tag: this._config.tags[key] ?? '',
-                        endSimbol: this._config.simbol_end[key],
-                        end: false,
-                        elemnts: [],
-                    } as MarkdownTypes.MarkdownElement;
-                };
-
-                if (!this._map_markdown_spec_simbols[startSymbol]) {
-                    this._map_markdown_spec_simbols[startSymbol] = true;
-
-                    const complexSpecSimbol = startSymbol.split('');
-
-                    complexSpecSimbol.forEach((item) => {
-                        if (!this._map_markdown_spec_simbols[item]) {
-                            this._map_markdown_spec_simbols[item] = true;
-                        }
-                    });
-                }
-            }
-        });
-
-        const unorderedListKey =
-            this._config.simbol_start['unordered_list'] instanceof RegExp
-                ? this._config.simbol_start['unordered_list'].source // Преобразование RegExp в строку
-                : this._config.simbol_start['unordered_list'];
-
-        const orderedListKey =
-            this._config.simbol_start['ordered_list'] instanceof RegExp
-                ? this._config.simbol_start['ordered_list'].source // Преобразование RegExp в строку
-                : this._config.simbol_start['ordered_list'];
-
-        if (unorderedListKey)
-            mapping[unorderedListKey]().tagItem = this._config.tags.list_item;
-        if (orderedListKey)
-            mapping[orderedListKey]().tagItem = this._config.tags.list_item;
-
-        this._map_markdown_elements = mapping;
-    }
-
-    private getLastElement() {
-        if (!this._markdown_elements.length) return null;
-
-        let lastElement =
-            this._markdown_elements[this._markdown_elements.length - 1];
-
-        if (lastElement.end) return null;
-
-        let isLast = false;
-
-        do {
-            if (!lastElement.elemnts?.length) {
-                isLast = true;
-            } else {
-                isLast = true;
-
-                for (let i = 1; i <= lastElement.elemnts.length; i++) {
-                    const element =
-                        lastElement.elemnts[lastElement.elemnts.length - i];
-                    if (!element.end) {
-                        lastElement =
-                            lastElement.elemnts[lastElement.elemnts.length - 1];
-
-                        isLast = false;
-                        break;
-                    }
-                }
-            }
-        } while (!isLast);
-
-        return lastElement;
-    }
-
     private handlerSimbol(v: string) {
-        const lastElement = this.getLastElement();
+        const specSimbol = this._map_spec_simbols[v] || null;
 
-        const checkSpecSimbol = this.checkMarkdownKey(v);
+        if (!specSimbol && !this._lastType) return v;
+
+        const currentType = specSimbol?.type;
+        const preventType = this._lastType;
+        const handler = this._map_handlers[currentType];
+        let preventHandler: AHandlerSimbol | null = null;
+
+        if (preventType) {
+            preventHandler = this._map_handlers[preventType];
+        }
+
+        if (!handler && !preventHandler) return '';
 
         let str = '';
 
-        if (
-            !!lastElement &&
-            (lastElement.endSimbol === this._markdown_spec_simbol ||
-                lastElement.endSimbol === v)
-        ) {
-            let str = this.generateEndHTMLTag(lastElement);
-
-            return str;
-        }
-
-        if (!checkSpecSimbol) {
-            let newElement =
-                this._map_markdown_elements[this._markdown_spec_simbol];
-
-            if (newElement?.()) {
-                let NElement = newElement();
-
-                if (!lastElement) {
-                    this._markdown_elements.push(NElement);
-                } else {
-                    lastElement.elemnts.push(NElement);
-                }
-
-                str += this.generateStartHTMLTag(NElement);
+        if (preventHandler && handler) {
+            if (preventHandler.type === handler.type) {
+                let result = handler.handlerSimbol(v);
+                if (result.isEnd) this._lastType = null;
+                str += result.text;
             } else {
-                str += this._markdown_spec_simbol;
+                str += preventHandler.handlerSimbol(v).text;
+                let result = handler.handlerSimbol(v);
+                if (result.isEnd) this._lastType = null;
+                str += result.text;
             }
-
-            this._markdown_spec_simbol = '';
-
-            if (!checkSpecSimbol) return str + v;
-            else return str;
+            this._lastType = currentType;
+        } else if (preventHandler && !handler) {
+            let result = preventHandler.handlerSimbol(v);
+            if (result.isEnd) this._lastType = null;
+            str += result.text;
+        } else if (!preventHandler && handler) {
+            let result = handler.handlerSimbol(v);
+            if (result.isEnd) this._lastType = null;
+            str += result.text;
+            this._lastType = currentType;
         }
 
-        return '';
-    }
-
-    private generateEndHTMLTag(element: MarkdownTypes.MarkdownElement) {
-        element.end = true;
-        this._markdown_spec_simbol = '';
-        return `</${element.tag}>`;
-    }
-
-    private generateStartHTMLTag(element: MarkdownTypes.MarkdownElement) {
-        return `<${element.tag} class=${element.class}">`;
-    }
-
-    private checkMarkdownKey(symbol: string) {
-        const totalSimbol = this._markdown_spec_simbol + symbol;
-
-        const result = this._map_markdown_spec_simbols[totalSimbol];
-
-        if (result) {
-            this._markdown_spec_simbol = totalSimbol;
-            return true;
-        } else {
-            return false;
-        }
+        return str;
     }
 }

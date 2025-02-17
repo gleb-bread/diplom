@@ -15,8 +15,8 @@ const component = computed(
 
 <template>
     <wrapper-component v-bind="props">
-        <template #default="{ isHovering }">
-            <v-textarea autofocus v-model="component.text" v-if="isHovering">
+        <template #default="{ isActive }">
+            <v-textarea autofocus v-model="component.text" v-if="isActive">
             </v-textarea>
             <div v-else v-html="$MARKDOWN.getHTML(component.text)"></div>
         </template>
