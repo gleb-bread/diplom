@@ -48,7 +48,7 @@ export type BasicMarkdownElement = {
     ignoreSpecSimbols: boolean;
     singlComponent: boolean;
     tag?: string;
-    endSimbol?: string;
+    endSimbol: string | null;
     class?: string;
     tagItem?: string;
 };

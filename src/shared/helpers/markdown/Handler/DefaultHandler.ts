@@ -55,7 +55,7 @@ export class DefaultHandler extends AHandler {
             preventHandler = this._map_handlers[preventType];
         }
 
-        if (!handler && !preventHandler) return '';
+        if (!handler && !preventHandler) return v;
 
         let str = '';
 

@@ -5,6 +5,7 @@ export class FontHandler extends AHandler {
     protected _items: MarkdownTypes.BasicMarkdownElement[];
     protected _map_items: MarkdownTypes.MapBasicMarkdownElement;
     protected _map_specsimbols: MarkdownTypes.MarkdownSpecsimbols = {};
+    protected _has_single_item: boolean = false;
     protected _output_items: MarkdownTypes.BasicMarkdownElement[] = [];
     protected _specsimbol: string = '';
     public type: MarkdownTypes.MarkdownElementTypes = 'font';
@@ -22,72 +23,91 @@ export class FontHandler extends AHandler {
     ): MarkdownTypes.HandlerResultText {
         const isSpecsimbol = this.getInputSpecsimbol(v);
         const preventItem = this.getItem(this._specsimbol);
+        const nextItem = this.getItem(this._specsimbol + v);
+        const lastOutputItem = this.getLastOutputItem();
+        let result = '';
 
-        if (isSpecsimbol) {
-            const totalSpecsimbol = this._specsimbol + v;
-            let item = this.getItem(totalSpecsimbol);
-
-            if (item === null && preventItem != null) {
-                const str = this.getStringByItem(preventItem);
-
-                this._specsimbol = v;
-
-                if (isLast) {
-                    this._specsimbol = '';
+        if (isLast) {
+            this._output_items.forEach((i, indx) => {
+                const index = this._output_items.length - indx;
+                const item = this._output_items[index];
+                if (item) {
+                    result += this.getEndTag(item);
                 }
+            });
 
-                return {
-                    text: isLast ? str + v : str,
-                    isEnd: true,
-                };
-            } else if (item) {
-                this._specsimbol += v;
-                let str = '';
+            this.restoreOutputVaribles();
+        }
 
-                if (isLast) {
-                    str += this.getStringByItem(item);
+        if (nextItem) {
+            if (lastOutputItem?.ignoreSpecSimbols) {
+                if (lastOutputItem.endSimbol === nextItem.specSimbol) {
+                    result += this.getStringByItem(nextItem);
                     this._specsimbol = '';
-                }
 
-                return {
-                    text: str,
-                    isEnd: false,
-                };
+                    if (this._has_single_item) {
+                        return this.getIsNotEndText(result);
+                    }
+
+                    return this.getIsEndText(result);
+                } else {
+                    result += this._specsimbol + v;
+                    this._specsimbol = '';
+                    console.log(123);
+                    return this.getIsNotEndText(result);
+                }
             } else {
                 this._specsimbol += v;
-                let str = '';
 
-                if (preventItem) {
-                    str += this.getStringByItem(preventItem);
+                if (lastOutputItem?.endSimbol === nextItem.specSimbol) {
+                    result += this.getStringByItem(nextItem);
+                    this._specsimbol = '';
+
+                    if (this._has_single_item) {
+                        return this.getIsNotEndText(result);
+                    }
+
+                    return this.getIsEndText(result);
                 }
 
-                return {
-                    text: v,
-                    isEnd: false,
-                };
+                return this.getIsNotEndText(result);
             }
+        } else if (preventItem && !nextItem) {
+            result = this.getStringByItem(preventItem);
+
+            this._has_single_item = this._has_single_item
+                ? this._has_single_item
+                : !!preventItem.singlComponent;
+
+            if (!isSpecsimbol) {
+                result += v;
+                this._specsimbol = '';
+            } else this._specsimbol = v;
+
+            if (this._has_single_item) {
+                return this.getIsNotEndText(result);
+            }
+
+            return this.getIsEndText(result);
+        }
+
+        if (isSpecsimbol) {
+            result += this._specsimbol;
+            this._specsimbol = v;
         } else {
-            let str = '';
-            let lastItem = this.getLastOutputItem();
-            if (preventItem) str += this.getStringByItem(preventItem);
-
-            if (isLast && lastItem) {
-                str += this.getEndTag(lastItem);
-                this._output_items.shift();
-            } else if (lastItem) {
-                if (
-                    lastItem.singlComponent !== true &&
-                    lastItem.specSimbol != preventItem?.specSimbol
-                )
-                    str += this.getStringByItem(lastItem);
-            }
-
+            result += this._specsimbol + v;
             this._specsimbol = '';
+        }
 
-            return {
-                text: str + v,
-                isEnd: false,
-            };
+        if (this._specsimbol) {
+            const item = this.getItem(this._specsimbol);
+            if (item) result += this.getStringByItem(item);
+        }
+
+        if (this._has_single_item) {
+            return this.getIsNotEndText(result);
+        } else {
+            return this.getIsEndText(result);
         }
     }
 }

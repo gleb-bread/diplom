@@ -26,6 +26,7 @@ export class DefaultMarkdown extends AMarkdown {
                     tag: 'h1',
                     typeElement: 'font',
                     class: 'diplim_h1',
+                    endSimbol: null,
                     ignoreSpecSimbols: false,
                 },
                 {
@@ -34,6 +35,7 @@ export class DefaultMarkdown extends AMarkdown {
                     tag: 'h2',
                     typeElement: 'font',
                     class: 'diplim_h2',
+                    endSimbol: null,
                     ignoreSpecSimbols: false,
                 },
                 {
@@ -42,6 +44,7 @@ export class DefaultMarkdown extends AMarkdown {
                     tag: 'h3',
                     typeElement: 'font',
                     class: 'diplim_h3',
+                    endSimbol: null,
                     ignoreSpecSimbols: false,
                 },
                 {
@@ -50,6 +53,7 @@ export class DefaultMarkdown extends AMarkdown {
                     tag: 'h4',
                     typeElement: 'font',
                     class: 'diplim_h4',
+                    endSimbol: null,
                     ignoreSpecSimbols: false,
                 },
                 {
@@ -58,6 +62,7 @@ export class DefaultMarkdown extends AMarkdown {
                     tag: 'h5',
                     typeElement: 'font',
                     class: 'diplim_h5',
+                    endSimbol: null,
                     ignoreSpecSimbols: false,
                 },
                 {
@@ -66,6 +71,7 @@ export class DefaultMarkdown extends AMarkdown {
                     tag: 'h6',
                     typeElement: 'font',
                     class: 'diplim_h6',
+                    endSimbol: null,
                     ignoreSpecSimbols: false,
                 },
                 {
@@ -115,7 +121,7 @@ export class DefaultMarkdown extends AMarkdown {
                 },
                 {
                     specSimbol: '```',
-                    singlComponent: false,
+                    singlComponent: true,
                     tag: 'code',
                     typeElement: 'font',
                     class: 'diplim_code_block',

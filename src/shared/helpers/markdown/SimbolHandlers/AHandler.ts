@@ -4,6 +4,7 @@ export abstract class AHandler {
     protected abstract _items: MarkdownTypes.BasicMarkdownElement[];
     protected abstract _map_items: MarkdownTypes.MapBasicMarkdownElement;
     protected abstract _map_specsimbols: MarkdownTypes.MarkdownSpecsimbols;
+    protected abstract _has_single_item: boolean;
     protected abstract _specsimbol: string;
     protected abstract _output_items: MarkdownTypes.BasicMarkdownElement[];
     public abstract type: MarkdownTypes.MarkdownElementTypes;
@@ -109,7 +110,7 @@ export abstract class AHandler {
             return str;
         } else {
             if (lastOutputItem.endSimbol === item.specSimbol) {
-                this._output_items.shift();
+                this._output_items.pop();
                 this._specsimbol = '';
                 return this.getEndTag(item);
             } else {
@@ -152,5 +153,24 @@ export abstract class AHandler {
 
     protected getLastOutputItem(): MarkdownTypes.BasicMarkdownElement | null {
         return this._output_items[this._output_items.length - 1] ?? null;
+    }
+
+    protected getIsEndText(text: string): MarkdownTypes.HandlerResultText {
+        return {
+            isEnd: true,
+            text: text,
+        };
+    }
+
+    protected getIsNotEndText(text: string): MarkdownTypes.HandlerResultText {
+        return {
+            isEnd: false,
+            text: text,
+        };
+    }
+
+    protected restoreOutputVaribles() {
+        this._specsimbol = '';
+        this._output_items = [];
     }
 }
