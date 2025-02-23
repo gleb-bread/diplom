@@ -27,10 +27,11 @@ export class FontHandler extends AHandler {
         const lastOutputItem = this.getLastOutputItem();
         let result = '';
 
-        //TODO если в конце будет закрывающий спец. символ будет ошибка
         if (isLast) {
+            if (!!this._specsimbol) result += this._specsimbol;
+
             this._output_items.forEach((i, indx) => {
-                const index = this._output_items.length - indx;
+                const index = this._output_items.length - (indx + 1);
                 const item = this._output_items[index];
                 if (item) {
                     result += this.getEndTag(item);
@@ -75,7 +76,9 @@ export class FontHandler extends AHandler {
                 return this.getIsNotEndText(result);
             }
         } else if (preventItem && !nextItem) {
-            result = this.getStringByItem(preventItem);
+            if (preventItem.singlComponent && !this._has_single_item)
+                result = this.getStringByItem(preventItem);
+            else result += this._specsimbol;
 
             this._has_single_item = this._has_single_item
                 ? this._has_single_item
