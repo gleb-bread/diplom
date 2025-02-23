@@ -172,5 +172,6 @@ export abstract class AHandler {
     protected restoreOutputVariables() {
         this._specsimbol = '';
         this._output_items = [];
+        this._has_single_item = false;
     }
 }

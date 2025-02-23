@@ -27,6 +27,7 @@ export class FontHandler extends AHandler {
         const lastOutputItem = this.getLastOutputItem();
         let result = '';
 
+        //TODO если в конце будет закрывающий спец. символ будет ошибка
         if (isLast) {
             this._output_items.forEach((i, indx) => {
                 const index = this._output_items.length - indx;
@@ -37,6 +38,8 @@ export class FontHandler extends AHandler {
             });
 
             this.restoreOutputVariables();
+
+            return this.getIsEndText(result);
         }
 
         if (nextItem) {
