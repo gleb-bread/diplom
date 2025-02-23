@@ -36,7 +36,7 @@ export class FontHandler extends AHandler {
                 }
             });
 
-            this.restoreOutputVaribles();
+            this.restoreOutputVariables();
         }
 
         if (nextItem) {
@@ -53,7 +53,6 @@ export class FontHandler extends AHandler {
                 } else {
                     result += this._specsimbol + v;
                     this._specsimbol = '';
-                    console.log(123);
                     return this.getIsNotEndText(result);
                 }
             } else {

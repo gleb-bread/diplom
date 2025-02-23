@@ -169,7 +169,7 @@ export abstract class AHandler {
         };
     }
 
-    protected restoreOutputVaribles() {
+    protected restoreOutputVariables() {
         this._specsimbol = '';
         this._output_items = [];
     }
