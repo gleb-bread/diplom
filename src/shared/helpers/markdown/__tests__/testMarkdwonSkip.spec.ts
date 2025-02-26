@@ -6,7 +6,7 @@ describe('Markdown Parser Skip', () => {
 
     it('должен корректно экранировать символы', () => {
         expect(parser.getHTML('\\**нежирный текст**')).toBe(
-            '**нежирный текст**'
+            '*<i class="diplim_italic">нежирный текст</i>*'
         );
         expect(parser.getHTML('\\# Не заголовок')).toBe('# Не заголовок');
         expect(parser.getHTML('\\*Не курсив*')).toBe('*Не курсив*');

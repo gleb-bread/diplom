@@ -34,7 +34,11 @@ export class DefaultHandler extends AHandler {
 
                     this._map_handlers[handlerType].restoreOutputVariables();
                 });
-            } else if (index === text.length - 1 && this.stackHandlersEmpty()) {
+            } else if (
+                index === text.length - 1 &&
+                this.stackHandlersEmpty() &&
+                !str
+            ) {
                 result += v;
             }
 
@@ -70,10 +74,18 @@ export class DefaultHandler extends AHandler {
         let result: MarkdownTypes.HandlerResultText | null = null;
         let type: MarkdownTypes.MarkdownElementTypes | null = null;
 
-        if (hasHandlerItem && !hasPreventHandlerItem) {
+        if (
+            hasHandlerItem &&
+            !hasPreventHandlerItem &&
+            preventHandler?.type !== 'skip'
+        ) {
             result = handler!.handlerSimbol(v);
             type = handler!.type;
-        } else if (hasHandlerItem && hasPreventHandlerItem) {
+        } else if (
+            hasHandlerItem &&
+            hasPreventHandlerItem &&
+            preventHandler?.type !== 'skip'
+        ) {
             result = preventHandler!.handlerSimbol(v);
             type = preventHandler!.type;
         } else if (handler && preventHandler?.type !== 'skip') {

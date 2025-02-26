@@ -109,7 +109,14 @@ export class FontHandler extends AHandler {
         }
 
         if (!!this._specsimbol || this._output_items.length) {
-            return this.returnIsContinueSimbol(result);
+            if (
+                this._output_items.length === 0 &&
+                this._specsimbol.length === 1
+            ) {
+                return this.returnIsNewSimbol(result);
+            } else {
+                return this.returnIsContinueSimbol(result);
+            }
         } else {
             return this.returnIsEndSimbol(result);
         }
