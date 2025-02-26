@@ -76,7 +76,7 @@ export class DefaultHandler extends AHandler {
         } else if (hasHandlerItem && hasPreventHandlerItem) {
             result = preventHandler!.handlerSimbol(v);
             type = preventHandler!.type;
-        } else if (handler) {
+        } else if (handler && preventHandler?.type !== 'skip') {
             result = handler!.handlerSimbol(v);
             type = handler!.type;
         } else if (preventHandler) {

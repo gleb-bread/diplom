@@ -65,7 +65,10 @@ export class FontHandler extends AHandler {
                     return this.returnIsEndSimbol(result);
                 }
 
-                if (this._specsimbol.length === 1)
+                if (
+                    this._output_items.length === 0 &&
+                    this._specsimbol.length === 1
+                )
                     return this.returnIsNewSimbol(result);
 
                 return this.returnIsContinueSimbol(result);
