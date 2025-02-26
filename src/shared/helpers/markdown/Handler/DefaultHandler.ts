@@ -6,7 +6,7 @@ export class DefaultHandler extends AHandler {
     protected _handlers: AHandlerSimbol[];
     protected _map_spec_simbols: MarkdownTypes.MarkdownSpecsimbols = {};
     protected _map_handlers: MarkdownTypes.MapMarkdownSimbolHandlers = {};
-    protected _lastType: MarkdownTypes.MarkdownElementTypes | null = null;
+    protected _stackHandlers: MarkdownTypes.MarkdownElementTypes[] = [];
 
     constructor(...handlers: AHandlerSimbol[]) {
         super();
@@ -25,16 +25,21 @@ export class DefaultHandler extends AHandler {
             let str = this.handlerSimbol(v);
 
             result += str;
-            if (index === text.length - 1 && !(this._lastType === null)) {
-                result +=
-                    this._map_handlers[this._lastType].handlerSimbol('', true)
-                        ?.text ?? '';
-            } else if (index === text.length - 1 && !this._lastType) {
+
+            if (index === text.length - 1 && !this.stackHandlersEmpty()) {
+                this._stackHandlers.forEach((handlerType) => {
+                    result +=
+                        this._map_handlers[handlerType].handlerSimbol('', true)
+                            ?.text ?? '';
+
+                    this._map_handlers[handlerType].restoreOutputVariables();
+                });
+            } else if (index === text.length - 1 && this.stackHandlersEmpty()) {
                 result += v;
             }
 
             if (index === text.length - 1) {
-                this._lastType = null;
+                this._stackHandlers = [];
             }
         });
 
@@ -44,44 +49,51 @@ export class DefaultHandler extends AHandler {
     private handlerSimbol(v: string) {
         const specSimbol = this._map_spec_simbols[v] || null;
 
-        if (!specSimbol && !this._lastType) return v;
+        if (!specSimbol && this.stackHandlersEmpty()) return v;
 
-        const currentType = specSimbol?.type;
-        const preventType = this._lastType;
-        const handler = this._map_handlers[currentType];
+        const currentType: MarkdownTypes.MarkdownElementTypes | null =
+            specSimbol?.type ?? null;
+        const preventType = this.getLastHanlder();
+        const handler: AHandlerSimbol | null =
+            this._map_handlers?.[currentType] ?? null;
         let preventHandler: AHandlerSimbol | null = null;
 
         if (preventType) {
             preventHandler = this._map_handlers[preventType];
         }
 
-        if (!handler && !preventHandler) return v;
-
         let str = '';
 
-        if (preventHandler && handler) {
-            if (preventHandler.type === handler.type) {
-                let result = handler.handlerSimbol(v);
-                if (result.isEnd) this._lastType = null;
-                str += result.text;
-            } else {
-                str += preventHandler.handlerSimbol(v).text;
-                let result = handler.handlerSimbol(v);
-                if (result.isEnd) this._lastType = null;
-                str += result.text;
-            }
-            this._lastType = currentType;
-        } else if (preventHandler && !handler) {
-            let result = preventHandler.handlerSimbol(v);
-            if (result.isEnd) this._lastType = null;
-            str += result.text;
-        } else if (!preventHandler && handler) {
-            let result = handler.handlerSimbol(v);
-            if (result.isEnd) this._lastType = null;
-            str += result.text;
-            this._lastType = currentType;
+        const hasHandlerItem = handler?.hasSingleItem?.() ?? false;
+        const hasPreventHandlerItem =
+            preventHandler?.hasSingleItem?.() ?? false;
+        let result: MarkdownTypes.HandlerResultText | null = null;
+        let type: MarkdownTypes.MarkdownElementTypes | null = null;
+
+        if (hasHandlerItem && !hasPreventHandlerItem) {
+            result = handler!.handlerSimbol(v);
+            type = handler!.type;
+        } else if (hasHandlerItem && hasPreventHandlerItem) {
+            result = preventHandler!.handlerSimbol(v);
+            type = preventHandler!.type;
+        } else if (handler) {
+            result = handler!.handlerSimbol(v);
+            type = handler!.type;
+        } else if (preventHandler) {
+            result = preventHandler!.handlerSimbol(v);
+            type = preventHandler!.type;
         }
 
-        return str;
+        if (result) {
+            if (result.isEnd === -1) {
+                this.popStackHandlers();
+            } else {
+                if (type) {
+                    if (result.isEnd === 1) this.pushStackHandlers(type);
+                }
+            }
+        }
+
+        return str + (result?.text ?? '');
     }
 }

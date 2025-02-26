@@ -155,23 +155,41 @@ export abstract class AHandler {
         return this._output_items[this._output_items.length - 1] ?? null;
     }
 
-    protected getIsEndText(text: string): MarkdownTypes.HandlerResultText {
+    protected returnIsNewSimbol(text: string): MarkdownTypes.HandlerResultText {
         return {
-            isEnd: true,
+            isEnd: 1,
             text: text,
         };
     }
 
-    protected getIsNotEndText(text: string): MarkdownTypes.HandlerResultText {
+    protected returnIsContinueSimbol(
+        text: string
+    ): MarkdownTypes.HandlerResultText {
         return {
-            isEnd: false,
+            isEnd: 0,
             text: text,
         };
     }
 
-    protected restoreOutputVariables() {
+    protected returnIsEndSimbol(text: string): MarkdownTypes.HandlerResultText {
+        return {
+            isEnd: -1,
+            text: text,
+        };
+    }
+
+    public restoreOutputVariables() {
         this._specsimbol = '';
         this._output_items = [];
-        this._has_single_item = false;
+    }
+
+    public hasSingleItem() {
+        return this._has_single_item;
+    }
+
+    public getSpecsimbolAndClear() {
+        const result = this._specsimbol;
+        this._specsimbol = '';
+        return result;
     }
 }

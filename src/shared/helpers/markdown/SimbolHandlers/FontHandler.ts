@@ -30,17 +30,13 @@ export class FontHandler extends AHandler {
         if (isLast) {
             if (!!this._specsimbol) result += this._specsimbol;
 
-            this._output_items.forEach((i, indx) => {
-                const index = this._output_items.length - (indx + 1);
-                const item = this._output_items[index];
-                if (item) {
-                    result += this.getEndTag(item);
-                }
-            });
+            const item = this.getLastOutputItem();
 
-            this.restoreOutputVariables();
+            if (item) {
+                result += this.getEndTag(item);
+            }
 
-            return this.getIsEndText(result);
+            return this.returnIsEndSimbol(result);
         }
 
         if (nextItem) {
@@ -49,15 +45,11 @@ export class FontHandler extends AHandler {
                     result += this.getStringByItem(nextItem);
                     this._specsimbol = '';
 
-                    if (this._has_single_item) {
-                        return this.getIsNotEndText(result);
-                    }
-
-                    return this.getIsEndText(result);
+                    return this.returnIsEndSimbol(result);
                 } else {
                     result += this._specsimbol + v;
                     this._specsimbol = '';
-                    return this.getIsNotEndText(result);
+                    return this.returnIsContinueSimbol(result);
                 }
             } else {
                 this._specsimbol += v;
@@ -66,37 +58,34 @@ export class FontHandler extends AHandler {
                     result += this.getStringByItem(nextItem);
                     this._specsimbol = '';
 
-                    if (this._has_single_item) {
-                        return this.getIsNotEndText(result);
+                    if (this._output_items.length) {
+                        return this.returnIsContinueSimbol(result);
                     }
 
-                    return this.getIsEndText(result);
+                    return this.returnIsEndSimbol(result);
                 }
 
-                return this.getIsNotEndText(result);
+                if (this._specsimbol.length === 1)
+                    return this.returnIsNewSimbol(result);
+
+                return this.returnIsContinueSimbol(result);
             }
         } else if (preventItem && !nextItem) {
-            if (preventItem.singlComponent && !this._has_single_item)
-                result = this.getStringByItem(preventItem);
-            else result += this._specsimbol;
+            result = this.getStringByItem(preventItem);
 
-            this._has_single_item = this._has_single_item
-                ? this._has_single_item
-                : !!preventItem.singlComponent;
-
-            if (!isSpecsimbol) {
+            if (!isSpecsimbol || preventItem?.ignoreSpecSimbols) {
                 result += v;
                 this._specsimbol = '';
             } else this._specsimbol = v;
 
-            if (this._has_single_item) {
-                return this.getIsNotEndText(result);
+            if (!!this._specsimbol || this._output_items.length) {
+                return this.returnIsContinueSimbol(result);
+            } else {
+                return this.returnIsEndSimbol(result);
             }
-
-            return this.getIsEndText(result);
         }
 
-        if (isSpecsimbol) {
+        if (isSpecsimbol && !lastOutputItem?.ignoreSpecSimbols) {
             result += this._specsimbol;
             this._specsimbol = v;
         } else {
@@ -106,13 +95,20 @@ export class FontHandler extends AHandler {
 
         if (this._specsimbol) {
             const item = this.getItem(this._specsimbol);
-            if (item) result += this.getStringByItem(item);
+
+            if (
+                this.getLastOutputItem() &&
+                item &&
+                this.getLastOutputItem()?.endSimbol === item?.specSimbol
+            ) {
+                result += this.getStringByItem(item);
+            }
         }
 
-        if (this._has_single_item) {
-            return this.getIsNotEndText(result);
+        if (!!this._specsimbol || this._output_items.length) {
+            return this.returnIsContinueSimbol(result);
         } else {
-            return this.getIsEndText(result);
+            return this.returnIsEndSimbol(result);
         }
     }
 }

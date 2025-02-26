@@ -40,7 +40,14 @@ import { AHandler } from './SimbolHandlers/AHandler';
 // text_style_list: '<<<',
 // backslash: '',
 
-export type MarkdownElementTypes = 'font' | 'table' | 'link' | 'skip' | 'list';
+export type MarkdownElementTypes =
+    | 'font'
+    | 'headers'
+    | 'code'
+    | 'table'
+    | 'link'
+    | 'skip'
+    | 'list';
 
 export type BasicMarkdownElement = {
     specSimbol: string;
@@ -72,6 +79,6 @@ export type MapMarkdownSimbolHandlers = {
 };
 
 export type HandlerResultText = {
-    isEnd: boolean;
+    isEnd: number;
     text: string;
 };
