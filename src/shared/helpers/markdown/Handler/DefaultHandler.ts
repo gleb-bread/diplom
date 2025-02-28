@@ -100,8 +100,6 @@ export class DefaultHandler extends AHandler {
             type = preventHandler!.type;
         }
 
-        console.log(v, result, [...this._stackHandlers]);
-
         if (result) {
             if (result.isEnd === -1) {
                 this.popStackHandlers();
