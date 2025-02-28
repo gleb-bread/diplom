@@ -2,6 +2,7 @@ import * as MarkdownTypes from './types';
 import { AMarkdown } from './AMarkdown';
 import { DefaultHandler } from './Handler/DefaultHandler';
 import { SimbolHandlers } from './SimbolHandlers';
+import { CodeHandler } from './SimbolHandlers/CodeHandler';
 
 export class DefaultMarkdown extends AMarkdown {
     protected _handler: DefaultHandler;
@@ -55,24 +56,6 @@ export class DefaultMarkdown extends AMarkdown {
                     class: 'diplim_strikethrough',
                     ignoreSpecSimbols: false,
                     endSimbol: '~~~',
-                },
-                {
-                    specSimbol: '`',
-                    singlComponent: false,
-                    tag: 'code',
-                    typeElement: 'font',
-                    class: 'diplim_inline_code',
-                    ignoreSpecSimbols: true,
-                    endSimbol: '`',
-                },
-                {
-                    specSimbol: '```',
-                    singlComponent: true,
-                    tag: 'code',
-                    typeElement: 'font',
-                    class: 'diplim_code_block',
-                    ignoreSpecSimbols: true,
-                    endSimbol: '```',
                 },
             ]),
 
@@ -140,6 +123,27 @@ export class DefaultMarkdown extends AMarkdown {
                     typeElement: 'skip',
                     ignoreSpecSimbols: false,
                     endSimbol: null,
+                },
+            ]),
+
+            new SimbolHandlers.CodeHandler([
+                {
+                    specSimbol: '```',
+                    singlComponent: true,
+                    tag: 'code',
+                    typeElement: 'code',
+                    class: 'diplim_code_block',
+                    ignoreSpecSimbols: true,
+                    endSimbol: '```',
+                },
+                {
+                    specSimbol: '`',
+                    singlComponent: false,
+                    tag: 'code',
+                    typeElement: 'code',
+                    class: 'diplim_inline_code',
+                    ignoreSpecSimbols: true,
+                    endSimbol: '`',
                 },
             ])
         );

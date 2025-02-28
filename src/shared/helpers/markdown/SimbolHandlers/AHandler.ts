@@ -72,8 +72,12 @@ export abstract class AHandler {
         type: any,
         result: MarkdownTypes.MarkdownSpecsimbols
     ) {
+        let subSimbol = '';
+
         this.getSubSpecsimbols(specSimbol).forEach((item) => {
-            result[item] ??= {
+            subSimbol += item;
+
+            result[subSimbol] ??= {
                 isFullSpecsimbol: false,
                 isEndSimbol: false,
                 type,
@@ -189,6 +193,7 @@ export abstract class AHandler {
 
     public getSpecsimbolAndClear() {
         const result = this._specsimbol;
+
         this._specsimbol = '';
         return result;
     }

@@ -88,13 +88,19 @@ export class DefaultHandler extends AHandler {
         ) {
             result = preventHandler!.handlerSimbol(v);
             type = preventHandler!.type;
-        } else if (handler && preventHandler?.type !== 'skip') {
+        } else if (
+            handler &&
+            preventHandler?.type !== 'skip' &&
+            preventHandler?.type !== 'code'
+        ) {
             result = handler!.handlerSimbol(v);
             type = handler!.type;
         } else if (preventHandler) {
             result = preventHandler!.handlerSimbol(v);
             type = preventHandler!.type;
         }
+
+        console.log(v, result, [...this._stackHandlers]);
 
         if (result) {
             if (result.isEnd === -1) {
