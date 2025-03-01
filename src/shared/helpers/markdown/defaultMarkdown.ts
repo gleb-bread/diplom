@@ -145,6 +145,28 @@ export class DefaultMarkdown extends AMarkdown {
                     ignoreSpecSimbols: true,
                     endSimbol: '`',
                 },
+            ]),
+
+            new SimbolHandlers.LinkHandler([
+                {
+                    specSimbol: '[',
+                    singlComponent: true,
+                    typeElement: 'link',
+                    class: 'diplim_link',
+                    target: 'link_text',
+                    ignoreSpecSimbols: false,
+                    endSimbol: ']',
+                },
+                {
+                    specSimbol: '(',
+                    singlComponent: true,
+                    typeElement: 'link',
+                    tag: 'a',
+                    class: 'diplim_link',
+                    target: 'link_href',
+                    ignoreSpecSimbols: false,
+                    endSimbol: ')',
+                },
             ])
         );
 

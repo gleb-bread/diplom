@@ -14,6 +14,8 @@ export abstract class AHandler {
         isLast?: boolean
     ): MarkdownTypes.HandlerResultText;
 
+    public abstract handlerNewHandler(): MarkdownTypes.HandlerResultText;
+
     protected getInputSpecsimbol(
         v: string
     ): null | MarkdownTypes.MarkdownSpecsimbol {

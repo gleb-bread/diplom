@@ -72,6 +72,7 @@ export class DefaultHandler extends AHandler {
         const hasPreventHandlerItem =
             preventHandler?.hasSingleItem?.() ?? false;
         let result: MarkdownTypes.HandlerResultText | null = null;
+        let preventResult: MarkdownTypes.HandlerResultText | null = null;
         let type: MarkdownTypes.MarkdownElementTypes | null = null;
 
         if (
@@ -93,12 +94,17 @@ export class DefaultHandler extends AHandler {
             preventHandler?.type !== 'skip' &&
             preventHandler?.type !== 'code'
         ) {
+            if (handler?.type != preventHandler?.type) {
+                preventResult = preventHandler?.handlerNewHandler() ?? null;
+            }
             result = handler!.handlerSimbol(v);
             type = handler!.type;
         } else if (preventHandler) {
             result = preventHandler!.handlerSimbol(v);
             type = preventHandler!.type;
         }
+
+        console.log(v, result, preventResult, [...this._stackHandlers]);
 
         if (result) {
             if (result.isEnd === -1) {
@@ -110,6 +116,12 @@ export class DefaultHandler extends AHandler {
             }
         }
 
-        return str + (result?.text ?? '');
+        if (preventResult) {
+            if (preventResult.isEnd === -1) {
+                this.popStackHandlers();
+            }
+        }
+
+        return str + (preventResult?.text ?? '') + (result?.text ?? '');
     }
 }

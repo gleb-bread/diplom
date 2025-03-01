@@ -49,11 +49,14 @@ export type MarkdownElementTypes =
     | 'skip'
     | 'list';
 
+export type MarkdownElementTargets = 'link_text' | 'link_href';
+
 export type BasicMarkdownElement = {
     specSimbol: string;
     typeElement: MarkdownElementTypes;
     ignoreSpecSimbols: boolean;
     singlComponent: boolean;
+    target?: MarkdownElementTargets;
     tag?: string;
     endSimbol: string | null;
     class?: string;

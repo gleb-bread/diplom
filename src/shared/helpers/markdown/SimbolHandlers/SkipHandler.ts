@@ -17,6 +17,10 @@ export class SkipHandler extends AHandler {
         this._map_items = {};
     }
 
+    public handlerNewHandler(): MarkdownTypes.HandlerResultText {
+        return this.returnIsContinueSimbol('');
+    }
+
     public handlerSimbol(
         v: string,
         isLast: boolean = false

@@ -17,6 +17,38 @@ export class CodeHandler extends AHandler {
         this._map_items = {};
     }
 
+    public handlerNewHandler(): MarkdownTypes.HandlerResultText {
+        const v = this._specsimbol;
+        const inputItem = this.getItem(v);
+        let result = '';
+
+        if (this._output_items.length) {
+            const lastOutputItem = this.getLastOutputItem();
+
+            if (lastOutputItem?.endSimbol === v) {
+                result = this.getStringByItem(lastOutputItem);
+
+                if (lastOutputItem.singlComponent) {
+                    return this.returnIsContinueSimbol(result);
+                } else {
+                    this.getSpecsimbolAndClear();
+
+                    return this.returnIsEndSimbol(result);
+                }
+            }
+        } else if (inputItem) {
+            result = this.getStringByItem(inputItem);
+
+            return this.returnIsContinueSimbol(result);
+        } else {
+            result += v;
+        }
+
+        this.getSpecsimbolAndClear();
+
+        return this.returnIsEndSimbol(result);
+    }
+
     public handlerSimbol(
         v: string,
         isLast: boolean = false
