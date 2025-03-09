@@ -22,7 +22,7 @@ export abstract class AHandler {
         return this._map_specsimbols[v] ?? null;
     }
 
-    protected getItem(v: string): MarkdownTypes.BasicMarkdownElement | null {
+    public getItem(v: string): MarkdownTypes.BasicMarkdownElement | null {
         return this._map_items[v] ?? null;
     }
 

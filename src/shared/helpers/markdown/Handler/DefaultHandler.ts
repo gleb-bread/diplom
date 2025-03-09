@@ -18,7 +18,6 @@ export class DefaultHandler extends AHandler {
 
     public getHTML(input: string) {
         let result = '';
-
         const text = input.trim().split('');
 
         text.forEach((v, index) => {
@@ -58,7 +57,7 @@ export class DefaultHandler extends AHandler {
         const currentType: MarkdownTypes.MarkdownElementTypes | null =
             specSimbol?.type ?? null;
         const preventType = this.getLastHanlder();
-        const handler: AHandlerSimbol | null =
+        let handler: AHandlerSimbol | null =
             this._map_handlers?.[currentType] ?? null;
         let preventHandler: AHandlerSimbol | null = null;
 
@@ -75,11 +74,7 @@ export class DefaultHandler extends AHandler {
         let preventResult: MarkdownTypes.HandlerResultText | null = null;
         let type: MarkdownTypes.MarkdownElementTypes | null = null;
 
-        if (
-            hasHandlerItem &&
-            !hasPreventHandlerItem &&
-            preventHandler?.type !== 'skip'
-        ) {
+        if (hasHandlerItem && !hasPreventHandlerItem && !preventHandler) {
             result = handler!.handlerSimbol(v);
             type = handler!.type;
         } else if (
@@ -94,17 +89,38 @@ export class DefaultHandler extends AHandler {
             preventHandler?.type !== 'skip' &&
             preventHandler?.type !== 'code'
         ) {
-            if (handler?.type != preventHandler?.type) {
-                preventResult = preventHandler?.handlerNewHandler() ?? null;
+            if (handler?.type === 'unknown') {
+                if (preventHandler?.type) {
+                    preventResult = preventHandler!.handlerSimbol(v);
+                    type = preventHandler!.type;
+                } else {
+                    type = handler.getItem(v)?.handlerWhenAllNull ?? null;
+
+                    if (type) {
+                        handler = this._map_handlers[type];
+                        result = handler.handlerSimbol(v);
+                    }
+                }
+            } else {
+                if (!hasHandlerItem) {
+                    if (
+                        handler?.type != preventHandler?.type &&
+                        !hasPreventHandlerItem
+                    ) {
+                        preventResult =
+                            preventHandler?.handlerNewHandler() ?? null;
+                    }
+                    result = handler!.handlerSimbol(v);
+                    type = handler!.type;
+                } else {
+                    result = preventHandler!.handlerSimbol(v);
+                    type = preventHandler!.type;
+                }
             }
-            result = handler!.handlerSimbol(v);
-            type = handler!.type;
         } else if (preventHandler) {
             result = preventHandler!.handlerSimbol(v);
             type = preventHandler!.type;
         }
-
-        console.log(v, result, preventResult, [...this._stackHandlers]);
 
         if (result) {
             if (result.isEnd === -1) {

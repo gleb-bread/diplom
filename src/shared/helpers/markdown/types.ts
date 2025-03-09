@@ -47,9 +47,16 @@ export type MarkdownElementTypes =
     | 'table'
     | 'link'
     | 'skip'
+    | 'unknown'
+    | 'img'
     | 'list';
 
-export type MarkdownElementTargets = 'link_text' | 'link_href';
+export type MarkdownElementTargets =
+    | 'link_text'
+    | 'link_href'
+    | 'img_title'
+    | 'img_alt'
+    | 'img_href';
 
 export type BasicMarkdownElement = {
     specSimbol: string;
@@ -58,6 +65,7 @@ export type BasicMarkdownElement = {
     singlComponent: boolean;
     target?: MarkdownElementTargets;
     tag?: string;
+    handlerWhenAllNull?: MarkdownElementTypes;
     endSimbol: string | null;
     class?: string;
     tagItem?: string;

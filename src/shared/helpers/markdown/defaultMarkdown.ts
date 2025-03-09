@@ -149,15 +149,6 @@ export class DefaultMarkdown extends AMarkdown {
 
             new SimbolHandlers.LinkHandler([
                 {
-                    specSimbol: '[',
-                    singlComponent: true,
-                    typeElement: 'link',
-                    class: 'diplim_link',
-                    target: 'link_text',
-                    ignoreSpecSimbols: false,
-                    endSimbol: ']',
-                },
-                {
                     specSimbol: '(',
                     singlComponent: true,
                     typeElement: 'link',
@@ -166,6 +157,76 @@ export class DefaultMarkdown extends AMarkdown {
                     target: 'link_href',
                     ignoreSpecSimbols: false,
                     endSimbol: ')',
+                },
+                {
+                    specSimbol: '[',
+                    singlComponent: false,
+                    typeElement: 'link',
+                    target: 'link_text',
+                    class: 'diplim_link',
+                    tag: 'a',
+                    ignoreSpecSimbols: false,
+                    endSimbol: ']',
+                },
+            ]),
+
+            new SimbolHandlers.ImgHandler([
+                {
+                    specSimbol: '![',
+                    singlComponent: true,
+                    typeElement: 'img',
+                    class: 'diplim_img',
+                    target: 'img_alt',
+                    ignoreSpecSimbols: true,
+                    endSimbol: ']',
+                },
+                {
+                    specSimbol: '(',
+                    singlComponent: true,
+                    typeElement: 'img',
+                    tag: 'img',
+                    class: 'diplim_img',
+                    target: 'img_href',
+                    ignoreSpecSimbols: true,
+                    endSimbol: ')',
+                },
+
+                {
+                    specSimbol: '|',
+                    singlComponent: true,
+                    typeElement: 'img',
+                    tag: 'img',
+                    class: 'diplim_img',
+                    target: 'img_title',
+                    ignoreSpecSimbols: false,
+                    endSimbol: null,
+                },
+            ]),
+
+            new SimbolHandlers.UnknownHandler([
+                {
+                    specSimbol: '(',
+                    singlComponent: false,
+                    typeElement: 'unknown',
+                    handlerWhenAllNull: 'link',
+                    ignoreSpecSimbols: false,
+                    endSimbol: ')',
+                },
+                {
+                    specSimbol: '[',
+                    singlComponent: false,
+                    typeElement: 'unknown',
+                    handlerWhenAllNull: 'link',
+                    ignoreSpecSimbols: false,
+                    endSimbol: ']',
+                },
+                {
+                    specSimbol: '|',
+                    singlComponent: false,
+                    typeElement: 'unknown',
+                    handlerWhenAllNull: 'table',
+                    ignoreSpecSimbols: false,
+                    endSimbol: null,
                 },
             ])
         );
