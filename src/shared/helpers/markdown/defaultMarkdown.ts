@@ -204,6 +204,7 @@ export class DefaultMarkdown extends AMarkdown {
             ]),
 
             new SimbolHandlers.NumberdListHandler([]),
+            new SimbolHandlers.BulletedListHandler([]),
 
             new SimbolHandlers.UnknownHandler([
                 {
@@ -227,6 +228,14 @@ export class DefaultMarkdown extends AMarkdown {
                     singlComponent: false,
                     typeElement: 'unknown',
                     handlerWhenAllNull: 'table',
+                    ignoreSpecSimbols: false,
+                    endSimbol: null,
+                },
+                {
+                    specSimbol: '\n',
+                    singlComponent: true,
+                    typeElement: 'unknown',
+                    handlerWhenAllNull: 'numbered_list',
                     ignoreSpecSimbols: false,
                     endSimbol: null,
                 },

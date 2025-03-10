@@ -6,6 +6,7 @@ import { LinkHandler } from './LinkHandler';
 import { ImgHandler } from './ImgHandler';
 import { UnknownHandler } from './UnknownHandler';
 import { NumberdListHandler } from './NumberdListHandler';
+import { BulletedListHandler } from './BulletedListHandler';
 
 export const SimbolHandlers = {
     FontHandler,
@@ -16,4 +17,5 @@ export const SimbolHandlers = {
     ImgHandler,
     UnknownHandler,
     NumberdListHandler,
+    BulletedListHandler,
 };

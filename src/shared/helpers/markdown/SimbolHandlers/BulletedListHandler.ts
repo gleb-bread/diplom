@@ -1,21 +1,22 @@
 import * as MarkdownTypes from '../types';
 import { AHandler } from './AHandler';
 
-export class NumberdListHandler extends AHandler {
+export class BulletedListHandler extends AHandler {
     protected _items: MarkdownTypes.BasicMarkdownElement[];
     protected _map_items: MarkdownTypes.MapBasicMarkdownElement;
     protected _map_specsimbols: MarkdownTypes.MarkdownSpecsimbols = {};
     protected _has_single_item: boolean = true;
     protected _output_items: MarkdownTypes.BasicMarkdownElement[] = [];
-    protected _list_items: MarkdownTypes.NumberedListMarkdownElement[] = [];
+    protected _list_items: MarkdownTypes.BasicListMarkdownElement[] = [];
     protected _specsimbol: string = '';
-    protected _list_tag = 'ol';
+    protected _list_tag = 'ul';
     protected _has_start = false;
-    protected _list_class = 'diplim_numbered_list';
-    protected _list_item_class = 'diplim_numbered_list_item';
+    protected _list_class = 'diplim_bulleted_list';
+    protected _list_item_class = 'diplim_bulleted_list_item';
+    protected _list_markers = ['-'];
     protected _list_item_tag = 'li';
     protected _list_item_end_simbol = '\n';
-    public type: MarkdownTypes.MarkdownElementTypes = 'numbered_list';
+    public type: MarkdownTypes.MarkdownElementTypes = 'bulleted_list';
 
     constructor(items: MarkdownTypes.BasicMarkdownElement[]) {
         super();
@@ -30,16 +31,11 @@ export class NumberdListHandler extends AHandler {
 
     protected isNumber = (s: string) => !isNaN(Number(s));
 
-    protected createListItem(
-        v: string
-    ): MarkdownTypes.NumberedListMarkdownElement {
-        const value = this.isNumber(v) ? Number(v) : 0;
-
+    protected createListItem(): MarkdownTypes.BasicListMarkdownElement {
         return {
             class: this._list_item_class,
             endSimbol: this._list_item_end_simbol,
             tag: this._list_item_tag,
-            value: value,
         };
     }
 
@@ -68,11 +64,8 @@ export class NumberdListHandler extends AHandler {
 
         if (isSpecsimbol) {
             if (this._specsimbol.length > 0) {
-                if (this.isNumber(v)) {
-                    this._specsimbol += v;
-                    return this.returnIsContinueSimbol(result);
-                } else if (!isSpecsimbol.isEndSimbol) {
-                    const newItem = this.createListItem(this._specsimbol);
+                if (!isSpecsimbol.isEndSimbol && !this.isMarker(v)) {
+                    const newItem = this.createListItem();
 
                     this._list_items.push(newItem);
                     let lastItemList = this.getLastItemList();
@@ -88,10 +81,22 @@ export class NumberdListHandler extends AHandler {
 
                     return this.returnIsContinueSimbol(result);
                 } else {
-                    return this.returnIsContinueSimbol(this._specsimbol + v);
+                    if (!this._has_start) {
+                        const result = this.returnIsEndSimbol(
+                            this._specsimbol + v
+                        );
+                        this._specsimbol = '';
+                        return result;
+                    } else {
+                        const result = this.returnIsContinueSimbol(
+                            this._specsimbol + v
+                        );
+                        this._specsimbol = '';
+                        return result;
+                    }
                 }
             } else {
-                if (this.isNumber(v) && this._list_items.length == 0) {
+                if (this.isMarker(v) && this._list_items.length == 0) {
                     this._specsimbol += v;
                     if (!this._has_start) return this.returnIsNewSimbol(result);
                     else return this.returnIsContinueSimbol(result);
@@ -123,15 +128,14 @@ export class NumberdListHandler extends AHandler {
     public getSpecsimbols(): MarkdownTypes.MarkdownSpecsimbols {
         let result = {} as MarkdownTypes.MarkdownSpecsimbols;
 
-        for (let number = 0; number < 10; number++) {
-            const stringNumber = String(number);
-            result[stringNumber] = this.createSpecsimbol(
+        this._list_markers.forEach((item) => {
+            result[item] = this.createSpecsimbol(
                 { typeElement: this.type },
                 false
             );
-        }
+        });
 
-        result['.'] = this.createSpecsimbol({ typeElement: this.type }, false);
+        result[' '] = this.createSpecsimbol({ typeElement: this.type }, false);
 
         result[this._list_item_end_simbol] = this.createSpecsimbol(
             { typeElement: this.type },
@@ -160,13 +164,11 @@ export class NumberdListHandler extends AHandler {
     }
 
     protected getStartItemTag(
-        item: MarkdownTypes.NumberedListMarkdownElement
+        item: MarkdownTypes.BasicListMarkdownElement
     ): string {
         let tag = `<${this._list_item_tag} `;
 
-        if (this._list_item_class) tag += `class="${this._list_item_class}" `;
-
-        tag += `value="${item.value}"`;
+        if (this._list_item_class) tag += `class="${this._list_item_class}"`;
 
         tag += '>';
 
@@ -181,5 +183,9 @@ export class NumberdListHandler extends AHandler {
 
     protected getLastItemList() {
         return this._list_items[this._list_items.length - 1];
+    }
+
+    protected isMarker(v: string) {
+        return this._list_markers.includes(v);
     }
 }
