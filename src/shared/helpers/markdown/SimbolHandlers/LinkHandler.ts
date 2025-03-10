@@ -52,7 +52,6 @@ export class LinkHandler extends AHandler {
         isLast: boolean = false
     ): MarkdownTypes.HandlerResultText {
         this._input_text += v;
-
         const isSpecsimbol = this.getInputSpecsimbol(v);
         const preventItem = this.getItem(this._specsimbol);
         const nextItem = this.getItem(this._specsimbol + v);
@@ -93,11 +92,16 @@ export class LinkHandler extends AHandler {
                         result += this.getStringByItem(lastOutputItem);
 
                         this.getSpecsimbolAndClear();
+
+                        this._output_items.pop();
+
+                        return this.returnIsEndSimbol(result);
+                    } else {
+                        this._output_items.pop();
+                        this._specsimbol = '';
                     }
 
-                    this._output_items.pop();
-
-                    return this.returnIsEndSimbol(result);
+                    return this.returnIsContinueSimbol(result);
                 }
             }
 

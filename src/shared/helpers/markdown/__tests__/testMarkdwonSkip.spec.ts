@@ -10,5 +10,6 @@ describe('Markdown Parser Skip', () => {
         );
         expect(parser.getHTML('\\# Не заголовок')).toBe('# Не заголовок');
         expect(parser.getHTML('\\*Не курсив*')).toBe('*Не курсив*');
+        expect(parser.getHTML('\\*text\\*')).toBe('*text*');
     });
 });

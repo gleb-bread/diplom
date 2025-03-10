@@ -111,9 +111,10 @@ export class ImgHandler extends AHandler {
                         result += this.getStringByItem(lastOutputItem);
 
                         this.getSpecsimbolAndClear();
+                    } else {
+                        this._output_items.pop();
+                        this._specsimbol = '';
                     }
-
-                    this._output_items.pop();
 
                     return this.returnIsContinueSimbol(result);
                 } else if (
@@ -160,6 +161,10 @@ export class ImgHandler extends AHandler {
                     let firstOutputItem = this._output_items[0];
 
                     if (firstOutputItem.endSimbol === v) {
+                        result += this.getStringByItem(lastOutputItem);
+
+                        this.getSpecsimbolAndClear();
+
                         this._output_items = [];
 
                         return this.returnIsContinueSimbol(result);
