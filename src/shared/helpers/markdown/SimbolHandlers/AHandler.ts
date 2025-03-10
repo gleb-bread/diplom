@@ -61,7 +61,7 @@ export abstract class AHandler {
         return result;
     }
 
-    private createSpecsimbol(grandItem: any, isEndSimbol: boolean) {
+    protected createSpecsimbol(grandItem: any, isEndSimbol: boolean) {
         return {
             isFullSpecsimbol: true,
             isEndSimbol,
@@ -69,7 +69,7 @@ export abstract class AHandler {
         };
     }
 
-    private addSubSpecsimbols(
+    protected addSubSpecsimbols(
         specSimbol: string,
         type: any,
         result: MarkdownTypes.MarkdownSpecsimbols

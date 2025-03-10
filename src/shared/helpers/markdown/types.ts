@@ -49,7 +49,8 @@ export type MarkdownElementTypes =
     | 'skip'
     | 'unknown'
     | 'img'
-    | 'list';
+    | 'numbered_list'
+    | 'bulleted_list';
 
 export type MarkdownElementTargets =
     | 'link_text'
@@ -69,6 +70,16 @@ export type BasicMarkdownElement = {
     endSimbol: string | null;
     class?: string;
     tagItem?: string;
+};
+
+export type BasicListMarkdownElement = {
+    tag: string;
+    endSimbol: string | null;
+    class: string;
+};
+
+export type NumberedListMarkdownElement = BasicListMarkdownElement & {
+    value: number;
 };
 
 export type MapBasicMarkdownElement = {

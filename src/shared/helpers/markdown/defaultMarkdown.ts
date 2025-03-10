@@ -203,6 +203,8 @@ export class DefaultMarkdown extends AMarkdown {
                 },
             ]),
 
+            new SimbolHandlers.NumberdListHandler([]),
+
             new SimbolHandlers.UnknownHandler([
                 {
                     specSimbol: '(',
