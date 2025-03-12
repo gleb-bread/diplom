@@ -77,8 +77,6 @@ export class TableHandler extends AHandler {
             return this.returnIsEndSimbol(result);
         }
 
-        console.log(v, isSpecsimbol, this._has_header);
-
         if (isSpecsimbol && !isSpecsimbol.isEndSimbol) {
             if (!this._has_start) {
                 result += this.getTableStart();
