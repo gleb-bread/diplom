@@ -205,6 +205,7 @@ export class DefaultMarkdown extends AMarkdown {
 
             new SimbolHandlers.NumberdListHandler([]),
             new SimbolHandlers.BulletedListHandler([]),
+            new SimbolHandlers.TableHandler([]),
 
             new SimbolHandlers.UnknownHandler([
                 {

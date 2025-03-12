@@ -7,6 +7,7 @@ import { ImgHandler } from './ImgHandler';
 import { UnknownHandler } from './UnknownHandler';
 import { NumberdListHandler } from './NumberdListHandler';
 import { BulletedListHandler } from './BulletedListHandler';
+import { TableHandler } from './TableHandler';
 
 export const SimbolHandlers = {
     FontHandler,
@@ -18,4 +19,5 @@ export const SimbolHandlers = {
     UnknownHandler,
     NumberdListHandler,
     BulletedListHandler,
+    TableHandler,
 };
