@@ -13,6 +13,7 @@ export const initState = function () {
     const selectPage = ref<number>(
         Number(Helper.CookieAPI.getCookie(Env.Cookie.page) ?? 0)
     );
+    const componentMap = ref<Record<number, number>>({});
 
     const lastIndexNewComponent = ref(0);
     const focusComponent = ref<null | number>(null);
@@ -23,5 +24,6 @@ export const initState = function () {
         selectPage,
         lastIndexNewComponent,
         focusComponent,
+        componentMap,
     };
 };

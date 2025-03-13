@@ -49,4 +49,39 @@ export class Page extends Service {
             });
         });
     }
+
+    public async createComponent(
+        component: Models.Component | UnwrapRef<Models.Component>
+    ) {
+        const repository = new Repositories.Page({
+            payload: component.getDTO(),
+        });
+
+        const response = await repository.createComponent();
+
+        return new Promise<Response<Models.Component>>((resolve, reject) => {
+            this.validateRequest({
+                response: response,
+
+                success: async (response) => {
+                    const componentDTO = response.response.data.data;
+                    const component = DTOs.Component.toModel(componentDTO);
+
+                    resolve({
+                        status: response.status,
+                        result: response.result,
+                        data: component,
+                    });
+                },
+
+                error: (response) => {
+                    reject({
+                        status: response.status,
+                        result: response.result,
+                        data: response,
+                    });
+                },
+            });
+        });
+    }
 }

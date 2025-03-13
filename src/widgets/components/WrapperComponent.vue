@@ -22,6 +22,9 @@ const handlerHoverComponentWrapper = new Handlers.HoverComponent(
 const componentStore = useComponentStore();
 
 const handlerCreateComponent = new Handlers.CreateNewComponent(props.pageId);
+const handlerSaveUpdateComponent = new Handlers.SaveUpdateComponent(
+    props.componentId
+);
 
 const componentId = computed(() =>
     componentStore.getComponentHashById(props.componentId)
@@ -40,7 +43,7 @@ const getFocus = computed({
     <v-hover :model-value="getFocus">
         <template #default="{ isHovering, props }">
             <v-responsive
-                @click="
+                @click.stop="
                     $ACTION_MANAGER.pushAction(
                         new Actions.Click.ClickAction(
                             $event,
@@ -57,12 +60,13 @@ const getFocus = computed({
                     <icons-block :is-hovering="isHovering"></icons-block>
                     <div
                         class="main h-100 w-100"
-                        @keyup="
+                        @keyup.stop="
                             $ACTION_MANAGER.pushAction(
                                 new Actions.Keyboard.Keyup.KeyupAction(
                                     $event,
                                     config,
-                                    handlerCreateComponent
+                                    handlerCreateComponent,
+                                    handlerSaveUpdateComponent
                                 )
                             )
                         "

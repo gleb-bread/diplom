@@ -52,10 +52,20 @@ export class ARepository {
         }
     }
 
-    protected async PATCH() {
-        const config = this.getConfig();
-        const data = this.getData();
-        return axios.patch(this.getUrl(), data, config);
+    protected async PATCH<T>(): Promise<AxiosResponse<T>> {
+        try {
+            const config = this.getConfig();
+            const data = this.getData();
+            const response = await axios.patch<T>(this.getUrl(), data, config);
+            return response;
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                throw error;
+            } else {
+                console.log('unexpected error: ', error);
+                throw new Error('Unexpected error occurred');
+            }
+        }
     }
 
     protected async PUT() {

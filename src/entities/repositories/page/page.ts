@@ -29,4 +29,22 @@ export class Page extends Repositories.ARepository.ARepositorySecurity {
                 });
             });
     }
+
+    public async createComponent() {
+        this.addParamsInConfig({ path: 'component' });
+
+        return this.POST<
+            ARepositoryTypes.ServerResponse<DTOs.Component.ComponentDTO>
+        >()
+            .then((response) => {
+                return this.generateResponseSuccess({
+                    response: response,
+                });
+            })
+            .catch((response) => {
+                return this.generateResponseError({
+                    response: response,
+                });
+            });
+    }
 }
