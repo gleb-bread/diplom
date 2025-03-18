@@ -8,6 +8,8 @@ export interface IAliases {
     [AliasesUI.OutlinedBtn]: typeof Components.VBtn;
     [AliasesUI.DefaultBtn]: typeof Components.VBtn;
     [AliasesUI.NavigationProject]: typeof Components.VNavigationDrawer;
+    [AliasesUI.NavigatorList]: typeof Components.VList;
+    [AliasesUI.NavigatorCard]: typeof Components.VCard;
 }
 
 export const Aliases: IAliases = {
@@ -17,4 +19,6 @@ export const Aliases: IAliases = {
     [AliasesUI.OutlinedBtn]: Components.VBtn,
     [AliasesUI.DefaultBtn]: Components.VBtn,
     [AliasesUI.NavigationProject]: Components.VNavigationDrawer,
+    [AliasesUI.NavigatorList]: Components.VList,
+    [AliasesUI.NavigatorCard]: Components.VCard,
 };

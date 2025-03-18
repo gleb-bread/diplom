@@ -5,4 +5,6 @@ export enum AliasesUI {
     OutlinedBtn = 'OutlinedBtn',
     DefaultBtn = 'DefaultBtn',
     NavigationProject = 'NavigationProject',
+    NavigatorList = 'NavigatorList',
+    NavigatorCard = 'NavigatorCard',
 }

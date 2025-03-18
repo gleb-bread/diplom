@@ -1,14 +1,11 @@
 <script lang="ts" setup>
 import type { Props } from '../props';
-import { initComputed } from '../computed';
 import { ref, onMounted, watch, nextTick, computed } from 'vue';
 import { useComponentStore } from '@/app/stores/components';
 
 const props = defineProps<Props>();
 
 const componentStore = useComponentStore();
-
-const { getComponent } = initComputed();
 
 const component = computed(
     () => componentStore.getComponents[props.pageId][props.componentId]

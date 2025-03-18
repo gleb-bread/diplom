@@ -40,4 +40,24 @@ export const Default: {
             },
         },
     },
+    [AliasesUI.NavigatorList]: {
+        bgColor: 'background',
+        VListItem: {
+            class: ['font-xs'],
+            color: 'background',
+            link: true,
+            minHeight: 20,
+        },
+    },
+
+    [AliasesUI.NavigatorCard]: {
+        color: 'background',
+        elevation: 1,
+        VList: {
+            VListItem: {
+                rounded: 'lg',
+                minHeight: 10,
+            },
+        },
+    },
 };
