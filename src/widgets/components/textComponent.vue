@@ -27,25 +27,3 @@ const component = computed(
         </template>
     </wrapper-component>
 </template>
-
-<style scoped>
-.dynamic-textarea {
-    min-height: 50px;
-    width: 100%;
-    padding: 8px;
-    resize: none; /* Запрещаем изменение размера */
-    overflow: hidden;
-    box-sizing: border-box;
-    border-radius: 4px;
-    font-size: 14px;
-
-    /* Убираем подсветку при клике */
-    outline: none;
-    box-shadow: none;
-}
-
-.dynamic-textarea:focus {
-    outline: none;
-    box-shadow: none;
-}
-</style>
