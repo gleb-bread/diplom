@@ -10,9 +10,7 @@ export class Component extends Repositories.ARepository.ARepositorySecurity {
         super(`${PREFIX.V1}/component`, config);
     }
 
-    public async update(id: number) {
-        this.addParamsInConfig({ id: id });
-
+    public async update() {
         return this.PATCH<
             ARepositoryTypes.ServerResponse<DTOs.Component.ComponentDTO>
         >()

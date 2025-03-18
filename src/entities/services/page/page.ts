@@ -4,7 +4,8 @@ import * as Repositories from '@/entities/repositories';
 import type { Response } from '../Service/types';
 import * as DTOs from '@/entities/DTOs';
 import * as ServiceTypes from '@/entities/services/Service/types';
-import { Helper } from '@/shared/helpers';
+import { Component } from '@/entities/models/component';
+import * as Types from '@/shared/types';
 import type { UnwrapRef } from 'vue';
 
 export class Page extends Service {
@@ -18,7 +19,9 @@ export class Page extends Service {
         const response = await repository.getComponents(pageId);
 
         return new Promise<
-            Response<ServiceTypes.GenericList<Models.TextComponent>>
+            Response<
+                ServiceTypes.GenericList<Types.Component.AnyComponentModel>
+            >
         >((resolve, reject) => {
             this.validateRequest({
                 response: response,
@@ -26,7 +29,7 @@ export class Page extends Service {
                 success: async (response) => {
                     const componentDTOs = response.response.data.data;
                     const components = componentDTOs.map(
-                        DTOs.TextComponent.toModel
+                        Component.createFromDTO
                     );
 
                     resolve({

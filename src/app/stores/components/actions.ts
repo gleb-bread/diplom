@@ -6,6 +6,7 @@ import * as StoreHelper from './helper';
 import { usePageStore } from '../page';
 import { useProjectStore } from '../project';
 import * as Models from '@/entities/models';
+import * as Types from '@/shared/types';
 
 export const initActions = function (state: ReturnType<typeof initState>) {
     const setComponents = async function (id: number | null = null) {
@@ -58,7 +59,7 @@ export const initActions = function (state: ReturnType<typeof initState>) {
     };
 
     const saveUpdateNewComponent = async function (
-        component: Models.Component
+        component: Types.Component.AnyComponentModel
     ) {
         const id = component.id;
 
@@ -84,10 +85,11 @@ export const initActions = function (state: ReturnType<typeof initState>) {
         }
     };
 
-    const createRequestComponent = function (component: Models.Component) {
-        const requestComponent: Models.Component = Object.create(
-            Object.getPrototypeOf(component)
-        );
+    const createRequestComponent = function (
+        component: Types.Component.AnyComponentModel
+    ) {
+        const requestComponent: Types.Component.AnyComponentModel =
+            Object.create(Object.getPrototypeOf(component));
         Object.assign(requestComponent, component);
         const componentId = state.componentMap.value[component.id];
 
@@ -96,7 +98,9 @@ export const initActions = function (state: ReturnType<typeof initState>) {
         return requestComponent;
     };
 
-    const saveUpdates = async function (component: Models.Component) {
+    const saveUpdates = async function (
+        component: Types.Component.AnyComponentModel
+    ) {
         const service = new Services.Component();
         const response = await service.update(component);
     };

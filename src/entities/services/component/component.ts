@@ -5,6 +5,7 @@ import type { Response } from '../Service/types';
 import * as DTOs from '@/entities/DTOs';
 import * as ServiceTypes from '@/entities/services/Service/types';
 import { Helper } from '@/shared/helpers';
+import * as Types from '@/shared/types';
 import type { UnwrapRef } from 'vue';
 
 export class Component extends Service {
@@ -13,13 +14,15 @@ export class Component extends Service {
     }
 
     public async update(
-        component: Models.Component | UnwrapRef<Models.Component>
+        component:
+            | Types.Component.AnyComponentModel
+            | UnwrapRef<Types.Component.AnyComponentModel>
     ) {
         const repository = new Repositories.Component({
             payload: component.getDTO(),
         });
 
-        const response = await repository.update(component.id);
+        const response = await repository.update();
 
         return new Promise<Response<boolean>>((resolve, reject) => {
             this.validateRequest({

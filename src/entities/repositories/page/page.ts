@@ -2,6 +2,7 @@ import * as Repositories from '@/entities/repositories';
 import * as DTOs from '@/entities/DTOs';
 import * as ARepositoryTypes from '@/entities/repositories/ARepository/types';
 import { PREFIX } from '@/entities/repositories/prefix.enum';
+import * as Types from '@/shared/types';
 
 export class Page extends Repositories.ARepository.ARepositorySecurity {
     constructor(
@@ -14,9 +15,7 @@ export class Page extends Repositories.ARepository.ARepositorySecurity {
         this.addParamsInConfig({ id: id, path: 'components' });
 
         return this.GET<
-            ARepositoryTypes.ServerResponse<
-                DTOs.TextComponent.TextComponentDTO[]
-            >
+            ARepositoryTypes.ServerResponse<Types.Component.AnyComponentDTO[]>
         >()
             .then((response) => {
                 return this.generateResponseSuccess({
