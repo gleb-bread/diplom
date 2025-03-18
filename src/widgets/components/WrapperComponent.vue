@@ -65,7 +65,6 @@ const getFocus = computed({
                                 new Actions.Keyboard.Keyup.KeyupAction(
                                     $event,
                                     config,
-                                    handlerCreateComponent,
                                     handlerSaveUpdateComponent
                                 )
                             )
