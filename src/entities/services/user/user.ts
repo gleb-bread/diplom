@@ -52,7 +52,7 @@ export class User extends Service {
 
                     Helper.CookieAPI.setCookie(
                         Env.Cookie.page,
-                        String(page.id),
+                        String(page.public_id),
                         14,
                         {
                             path: '/',

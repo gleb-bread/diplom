@@ -1,9 +1,9 @@
 <script lang="ts" setup>
-import type { ItemProps } from './props';
+import type { ProjectProps } from './props';
 import { useProjectStore } from '@/app/stores/project';
 import { computed } from 'vue';
 
-const props = defineProps<ItemProps>();
+const props = defineProps<ProjectProps>();
 const projectStore = useProjectStore();
 
 const getTitle = computed(

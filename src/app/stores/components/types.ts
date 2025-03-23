@@ -3,10 +3,10 @@ import * as Models from '@/entities/models';
 
 export type ComponentList = {
     [
-        key: number
+        key: string
     ]: Types.Objects.NumberObject<Types.Component.AnyComponentModel>;
 };
 
 export type GenericList = {
-    [key: number]: number[];
+    [key: string]: number[];
 };

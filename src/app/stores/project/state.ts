@@ -3,10 +3,7 @@ import * as Types from '@/shared/types';
 import * as Models from '@/entities/models';
 
 export const initState = function () {
-    const projects = ref<Types.Objects.NumberObject<Models.Project>>({});
+    const project = ref<Models.Project | null>(null);
 
-    //Компонентные переменные
-    const genericList = ref<number[]>([]);
-
-    return { projects, genericList };
+    return { project };
 };

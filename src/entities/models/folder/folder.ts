@@ -3,25 +3,28 @@ import * as Models from '@/entities/models';
 import { ProjectElement } from '@/entities/models/project/projectElement/projectElement';
 import * as Types from '@/shared/types';
 
-export class Page extends ProjectElement {
-    private _folder_id: number | null;
-    private _type: Types.Project.ElementTypes.PAGE;
+export class Folder extends ProjectElement {
+    private _parent_id: null | number;
+    private _type: Types.Project.ElementTypes.FOLDER;
+    private _items: Types.Project.AnyProjectElement[];
     private _public_id: string;
 
-    constructor(dto: DTOs.Page.PageDTO) {
+    constructor(dto: DTOs.Folder.FolderDTO) {
         super(dto);
 
-        this._folder_id = dto.folder_id;
+        this._parent_id = dto.parent_id;
         this._type = dto.type;
+        this._items = dto.items;
         this._public_id = `${dto.type}_${super.id}`;
     }
-    public getDTO(): DTOs.Page.PageDTO {
+    public getDTO(): DTOs.Folder.FolderDTO {
         const parentDTO = super.getDTO();
 
         return {
             ...parentDTO,
-            folder_id: this._folder_id,
+            parent_id: this._parent_id,
             type: this._type,
+            items: this._items,
         };
     }
 
@@ -29,11 +32,14 @@ export class Page extends ProjectElement {
         return this._public_id;
     }
 
-    public get folder_id() {
-        return this._folder_id;
+    public get parent_id() {
+        return this._parent_id;
     }
-
     public get type() {
         return this._type;
+    }
+
+    public get items() {
+        return this._items;
     }
 }

@@ -15,6 +15,5 @@ app.use(Router);
 app.use(createVuetify);
 app.use(GloabalStyles);
 app.use(__init__);
-app.use(__start__);
 
 app.mount('#app');

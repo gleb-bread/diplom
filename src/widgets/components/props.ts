@@ -1,6 +1,6 @@
 import * as Models from '@/entities/models';
 
 export type Props = {
-    pageId: number;
+    pageId: string;
     componentId: number;
 };

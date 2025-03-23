@@ -4,7 +4,7 @@ import { initGetters } from './getters';
 import { initActions } from './actions';
 import { STORES } from '../stores.name.enum';
 
-export const usePageStore = defineStore(STORES.PAGE_STORE, () => {
+export const useProjectElements = defineStore(STORES.PROJECT_ELEMENTS, () => {
     const state = initState();
 
     const Getters = initGetters(state);

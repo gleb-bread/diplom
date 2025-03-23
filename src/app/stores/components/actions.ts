@@ -3,25 +3,29 @@ import { Helper } from '@/shared/helpers';
 import * as Services from '@/entities/services';
 import { Env } from '@/shared/env';
 import * as StoreHelper from './helper';
-import { usePageStore } from '../page';
+import { useProjectElements } from '../projectElements';
 import { useProjectStore } from '../project';
 import * as Models from '@/entities/models';
 import * as Types from '@/shared/types';
 
 export const initActions = function (state: ReturnType<typeof initState>) {
-    const setComponents = async function (id: number | null = null) {
+    const setComponents = async function (publicId: string | null = null) {
         const service = new Services.Page();
+        const projectElements = useProjectElements();
 
-        const pageId =
-            id ?? Number(Helper.CookieAPI.getCookie(Env.Cookie.page));
+        const pagePublicId = projectElements.getSelectPage;
 
-        service.getComponents(pageId).then((response) => {
-            state.components.value[pageId] = response.data.entities;
-            state.genericList.value[pageId] = response.data.genericList;
-        });
+        const page = projectElements.getElements[pagePublicId];
+
+        const response = await service.getComponents(page.id);
+
+        if (response.status) {
+            state.components.value[pagePublicId] = response.data.entities;
+            state.genericList.value[pagePublicId] = response.data.genericList;
+        }
     };
 
-    const pushNewElement = async function (id: number | null = null) {
+    const pushNewElement = async function (id: string | null = null) {
         state.lastIndexNewComponent.value -= 1;
 
         const pageId =
@@ -37,11 +41,11 @@ export const initActions = function (state: ReturnType<typeof initState>) {
     };
 
     const saveUpdateComponent = function (id: number) {
-        const pageStore = usePageStore();
+        const pageStore = useProjectElements();
 
         const pageId =
             pageStore.getSelectPage ??
-            Number(Helper.CookieAPI.getCookie(Env.Cookie.page));
+            Helper.CookieAPI.getCookie(Env.Cookie.page);
 
         const component: Models.TextComponent | null =
             state.components.value[pageId][id];
@@ -118,13 +122,13 @@ export const initActions = function (state: ReturnType<typeof initState>) {
     };
 
     const getComponentHashById = function (componentId: number) {
-        const pageStore = usePageStore();
+        const projectElementsStore = useProjectElements();
         const projectStore = useProjectStore();
 
-        const pageId = pageStore.getSelectPage ?? 0;
+        const pageId = projectElementsStore.getSelectPage ?? 0;
 
         const projectId = projectStore.getSelectProject;
-        const page = pageStore.getPages[projectId][pageId];
+        const page = projectElementsStore.getElements[pageId];
 
         return `${page.hash}-${componentId}`;
     };

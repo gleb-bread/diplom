@@ -1,23 +1,23 @@
 import { useProjectStore } from '@/app/stores/project';
-import { usePageStore } from '@/app/stores/page';
+import { useProjectElements } from '@/app/stores/projectElements';
 import { useComponentStore } from '@/app/stores/components';
 
 export const __start__ = async function () {
     await setProjects();
-    await setPages();
+    await setStructure();
     await setComponents();
 };
 
 export const setProjects = async function () {
     const projectStore = useProjectStore();
 
-    await projectStore.setProjects();
+    await projectStore.setProject();
 };
 
-export const setPages = async function () {
-    const pageStore = usePageStore();
+export const setStructure = async function () {
+    const pageStore = useProjectElements();
 
-    await pageStore.setPages();
+    await pageStore.setStructure();
 };
 
 export const setComponents = async function () {

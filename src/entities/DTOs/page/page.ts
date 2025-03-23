@@ -1,16 +1,10 @@
 import * as Models from '@/entities/models';
+import * as DTOs from '@/entities/DTOs';
+import * as Types from '@/shared/types';
 
-export type PageDTO = {
-    id: number;
-    type: null;
-    private: boolean;
-    archive: boolean;
-    user_id: number;
-    hash: string;
-    project_id: number;
-    name: string;
-    created_at: string | null;
-    updated_at: string | null;
+export type PageDTO = DTOs.ProjectElement.ProjectElementDTO & {
+    folder_id: number | null;
+    type: Types.Project.ElementTypes.PAGE;
 };
 
 export const toModel = function (dto: PageDTO) {

@@ -1,12 +1,12 @@
 <script lang="ts" setup>
 import { useProjectStore } from '@/app/stores/project';
-import { usePageStore } from '@/app/stores/page';
+import { useProjectElements } from '@/app/stores/projectElements';
 import { computed } from 'vue';
 import projectItem from './projectItem.vue';
 import pageItem from './pageItem.vue';
 
 const projectStore = useProjectStore();
-const pageStore = usePageStore();
+const pageStore = useProjectElements();
 
 const projectsIds = computed(() => projectStore.getGenericList);
 

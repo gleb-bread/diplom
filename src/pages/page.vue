@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { usePageStore } from '@/app/stores/page';
+import { useProjectElements } from '@/app/stores/projectElements';
 import { useComponentStore } from '@/app/stores/components';
 import { computed, defineComponent } from 'vue';
 import FactoryComponent from '@/widgets/components/FactoryComponent.vue';
@@ -14,7 +14,7 @@ defineComponent({ name: nameComponent });
 const config = new Config.Actions.Config(nameComponent);
 
 const componentStore = useComponentStore();
-const pageStore = usePageStore();
+const pageStore = useProjectElements();
 
 const pageId = pageStore.getSelectPage;
 

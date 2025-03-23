@@ -28,3 +28,8 @@ export type GenericList<T> = {
     genericList: number[];
     entities: Types.Objects.NumberObject<T>;
 };
+
+export type GenericStringList<T> = {
+    genericList: string[];
+    entities: Types.Objects.NumberObject<T>;
+};

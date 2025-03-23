@@ -6,13 +6,13 @@ import { Helper } from '@/shared/helpers';
 import { Env } from '@/shared/env';
 
 export const initState = function () {
-    const pages = ref<PageStoreTypes.PageList>({});
+    const elements = ref<PageStoreTypes.ElementsList>({});
 
     //Компонентные переменные
-    const genericList = ref<PageStoreTypes.GenericList>({});
-    const selectPage = ref<number>(
-        Number(Helper.CookieAPI.getCookie(Env.Cookie.page) ?? 0)
+    const genericList = ref<PageStoreTypes.GenericList>([]);
+    const selectPage = ref<string>(
+        String(Helper.CookieAPI.getCookie(Env.Cookie.page))
     );
 
-    return { pages, genericList, selectPage };
+    return { elements, genericList, selectPage };
 };

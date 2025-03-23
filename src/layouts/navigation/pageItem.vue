@@ -1,16 +1,16 @@
 <script lang="ts" setup>
 import type { ItemProps } from './props';
-import { usePageStore } from '@/app/stores/page';
+import { useProjectElements } from '@/app/stores/projectElements';
 import { useProjectStore } from '@/app/stores/project';
 import { computed } from 'vue';
 
 const props = defineProps<ItemProps>();
-const pageStore = usePageStore();
+const projectElements = useProjectElements();
 const projectStore = useProjectStore();
 
 const getTitle = computed(
-    () => (idPage: number) =>
-        pageStore.getPages[getSelectProject.value][idPage].name
+    () => (idPage: string) =>
+        projectElements.getElements[getSelectProject.value][idPage].name
 );
 
 const getSelectProject = computed(() => projectStore.getSelectProject);
