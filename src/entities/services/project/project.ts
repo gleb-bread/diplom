@@ -6,6 +6,8 @@ import * as DTOs from '@/entities/DTOs';
 import * as ServiceTypes from '@/entities/services/Service/types';
 import type { UnwrapRef } from 'vue';
 import * as Types from '@/shared/types';
+import * as ServiceHelper from './helper';
+import { Helper } from '@/shared/helpers';
 
 export class Project extends Service {
     constructor() {
@@ -19,7 +21,7 @@ export class Project extends Service {
 
         return new Promise<
             Response<
-                ServiceTypes.GenericStringList<Types.Project.AnyProjectElement>
+                ServiceTypes.GenericStringList<Types.Project.AnyProjectModels>
             >
         >((resolve, reject) => {
             this.validateRequest({
@@ -35,14 +37,16 @@ export class Project extends Service {
                         status: response.status,
                         result: response.result,
                         data: {
-                            entities: this.getCacheObject(
+                            entities: ServiceHelper.getCacheObject(
                                 structure,
                                 'public_id'
                             ),
-                            genericList: this.getIndexList(
-                                structure,
-                                'public_id'
-                            ),
+                            genericList:
+                                Helper.ProjectElementsAPI.getIndexListWithGroupedAlphabeticalSorting(
+                                    structure,
+                                    'public_id',
+                                    'name'
+                                ),
                         },
                     });
                 },

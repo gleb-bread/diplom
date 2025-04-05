@@ -19,6 +19,7 @@ export const STYLE_VARIBLES = {
     },
     NAVIGATION: {
         DEFAULT_RAIL_WIDTH: 84,
+        BTN_ICON_SIZE: 20,
     },
     COMPONENT: {
         WRAPPER: {

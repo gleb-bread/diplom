@@ -13,7 +13,9 @@ export class ProjectElement extends Models.Model<DTOs.ProjectElement.ProjectElem
     private _created_at: string;
     private _updated_at: string;
 
-    public static createFromDTO(dto: Types.Project.AnyProjectElement) {
+    public static createFromDTO(
+        dto: Types.Project.AnyProjectElement
+    ): Types.Project.AnyProjectModels {
         switch (dto.type) {
             case Types.Project.ElementTypes.FOLDER:
                 return new Models.Folder(dto);

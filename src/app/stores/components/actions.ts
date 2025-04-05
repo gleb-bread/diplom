@@ -123,11 +123,9 @@ export const initActions = function (state: ReturnType<typeof initState>) {
 
     const getComponentHashById = function (componentId: number) {
         const projectElementsStore = useProjectElements();
-        const projectStore = useProjectStore();
 
         const pageId = projectElementsStore.getSelectPage ?? 0;
 
-        const projectId = projectStore.getSelectProject;
         const page = projectElementsStore.getElements[pageId];
 
         return `${page.hash}-${componentId}`;

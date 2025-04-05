@@ -1,37 +1,67 @@
 <script lang="ts" setup>
 import { useProjectStore } from '@/app/stores/project';
 import { useProjectElements } from '@/app/stores/projectElements';
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import projectItem from './projectItem.vue';
 import pageItem from './pageItem.vue';
+import folderItem from './folderItem.vue';
+import * as Types from '@/shared/types';
 
 const projectStore = useProjectStore();
-const pageStore = useProjectElements();
+const projectElements = useProjectElements();
 
-const projectsIds = computed(() => projectStore.getGenericList);
+const project = computed(() => projectStore.getProject);
 
-const getPages = computed(() => {
-    return pageStore.getGenericList[getSelectProject.value];
+const getElements = computed(() => {
+    return projectElements.getGenericList;
 });
 
-const getSelectProject = computed(() => projectStore.getSelectProject);
+const getElement = computed(
+    () => (elementId: string) => projectElements.getElements[elementId]
+);
+
+const open = ref<any[]>([]);
+
+const opened = computed({
+    get() {
+        return open.value;
+    },
+    set(v: (number | string)[]) {
+        open.value = v;
+    },
+});
 </script>
 
 <template>
     <navigation-project>
-        <v-list :opened="[getSelectProject]">
-            <template v-for="id in projectsIds">
-                <v-list-group :value="id">
-                    <template #activator>
-                        <project-item :item-id="id"></project-item>
+        <template v-if="project">
+            <v-list v-model:opened="opened">
+                <v-list-group :value="project.id">
+                    <template #activator="{ props }">
+                        <project-item v-bind="props"></project-item>
                     </template>
                     <template #default>
-                        <template v-for="pageId in getPages">
-                            <page-item :item-id="pageId"></page-item>
+                        <template v-for="elementId in getElements">
+                            <template
+                                v-if="
+                                    getElement(elementId).type ==
+                                    Types.Project.ElementTypes.PAGE
+                                "
+                            >
+                                <page-item :item-id="elementId"></page-item>
+                            </template>
+                            <template
+                                v-if="
+                                    getElement(elementId).type ==
+                                    Types.Project.ElementTypes.FOLDER
+                                "
+                            >
+                                <folderItem :item-id="elementId"></folderItem>
+                            </template>
                         </template>
                     </template>
                 </v-list-group>
-            </template>
-        </v-list>
+            </v-list>
+        </template>
     </navigation-project>
 </template>

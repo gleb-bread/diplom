@@ -1,5 +1,6 @@
 import * as ServiceTypes from './types';
 import * as ARepositoryTypes from '@/entities/repositories/ARepository/types';
+import { Helper } from '@/shared/helpers';
 
 export class Service {
     protected getCacheObject<T, K extends keyof T>(array: T[], keyCache: K) {
@@ -54,5 +55,17 @@ export class Service {
                 payload.finally(payload.response);
             }
         }
+    }
+
+    protected getIndexListByAlphabeticalSorting<
+        T,
+        K extends keyof T,
+        S extends keyof T,
+    >(array: T[], keyCache: K, sortKey?: S): Array<T[K]> {
+        return Helper.ObjectAPI.getIndexListByAlphabeticalSorting(
+            array,
+            keyCache,
+            sortKey
+        );
     }
 }

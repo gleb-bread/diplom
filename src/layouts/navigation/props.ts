@@ -5,3 +5,5 @@ export type ItemProps = {
 export type ProjectProps = {
     itemId: number;
 };
+
+export type NavigationProps = {};
