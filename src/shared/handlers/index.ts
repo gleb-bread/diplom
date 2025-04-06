@@ -5,6 +5,7 @@ import { SaveUpdateComponent } from './saveUpdateComponent';
 import { CreateNewProjectElement } from './createNewProjectElement';
 import { UpdateProjectElement } from './updateProjectElement';
 import { DeleteProjectElement } from './deleteProjectElement';
+import { SetSelectPage } from './setSelectPage';
 
 export const Handlers = {
     HoverComponent,
@@ -14,4 +15,5 @@ export const Handlers = {
     CreateNewProjectElement,
     UpdateProjectElement,
     DeleteProjectElement,
+    SetSelectPage,
 };

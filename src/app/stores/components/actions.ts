@@ -17,7 +17,7 @@ export const initActions = function (state: ReturnType<typeof initState>) {
 
         const page = projectElements.getElements[pagePublicId];
 
-        const response = await service.getComponents(page.id);
+        const response = await service.getComponents(page?.id);
 
         if (response.status) {
             state.components.value[pagePublicId] = response.data.entities;

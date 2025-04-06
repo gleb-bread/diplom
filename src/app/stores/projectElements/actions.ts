@@ -2,8 +2,12 @@ import { initState } from './state';
 import { Helper } from '@/shared/helpers';
 import * as Services from '@/entities/services';
 import { Env } from '@/shared/env';
+import * as Types from '@/shared/types';
+import { useComponentStore } from '../components';
 
 export const initActions = function (state: ReturnType<typeof initState>) {
+    const componentStore = useComponentStore();
+
     const setStructure = async function (projectId: number | null = null) {
         const service = new Services.Project();
 
@@ -15,9 +19,10 @@ export const initActions = function (state: ReturnType<typeof initState>) {
         if (response.status) {
             state.elements.value = response.data.entities;
             state.genericList.value = response.data.genericList;
-            Helper.UrlAPI.addParamsInURL({
-                page: state.elements.value[state.selectPage.value].hash,
-            });
+            if (state.elements.value[state.selectPage.value]?.hash)
+                Helper.UrlAPI.addParamsInURL({
+                    page: state.elements.value[state.selectPage.value].hash,
+                });
         }
     };
 
@@ -25,5 +30,29 @@ export const initActions = function (state: ReturnType<typeof initState>) {
         state.genericList.value = list;
     };
 
-    return { setStructure, setGenericList };
+    const setSelectPage = async function (
+        page: Types.Project.AnyProjectModels
+    ) {
+        if (page.type !== Types.Project.ElementTypes.PAGE) return;
+
+        state.selectPage.value = page.public_id;
+
+        Helper.UrlAPI.addParamsInURL({
+            page: state.elements.value[state.selectPage.value].hash,
+        });
+
+        Helper.CookieAPI.setCookie(
+            Env.Cookie.page,
+            String(page.public_id),
+            14,
+            {
+                path: '/',
+                sameSite: 'Strict',
+            }
+        );
+
+        await componentStore.setComponents();
+    };
+
+    return { setStructure, setGenericList, setSelectPage };
 };

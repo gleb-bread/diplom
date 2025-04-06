@@ -13,7 +13,18 @@ export class Page extends Service {
         super();
     }
 
-    public async getComponents(pageId: number) {
+    public async getComponents(pageId: number | undefined) {
+        if (!pageId) {
+            return {
+                status: 200,
+                result: true,
+                data: {
+                    entities: [],
+                    genericList: [],
+                },
+            };
+        }
+
         const repository = new Repositories.Page();
 
         const response = await repository.getComponents(pageId);

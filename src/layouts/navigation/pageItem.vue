@@ -34,6 +34,8 @@ const handlerDeleteProjectElement = new Handlers.DeleteProjectElement(
     getElement.value
 );
 
+const handlerSetSelectPage = new Handlers.SetSelectPage(getElement.value);
+
 const { isActive, handleMouseEnter, handleMouseLeave } =
     Helper.ComponentsAPI.mouseOverHandler(0);
 
@@ -51,7 +53,19 @@ const activeRename = computed({
 </script>
 
 <template>
-    <v-list-item @mouseenter="handleMouseEnter" @mouseleave="handleMouseLeave">
+    <v-list-item
+        @click.stop="
+            $ACTION_MANAGER.pushAction(
+                new Actions.Click.ClickAction(
+                    <any>$event,
+                    config,
+                    handlerSetSelectPage
+                )
+            )
+        "
+        @mouseenter="handleMouseEnter"
+        @mouseleave="handleMouseLeave"
+    >
         <template #prepend>
             <div class="mr-2">
                 <v-icon>mdi-list-box-outline</v-icon>
