@@ -8,6 +8,7 @@ export const STYLE_VARIBLES = {
         PRIMARY: 'primary',
         SECONDARY: 'secondary',
         SURFACE: 'surface',
+        WHITE: 'white',
         ERROR: 'error',
         BACKGROUND: 'background',
         INFO: 'info',

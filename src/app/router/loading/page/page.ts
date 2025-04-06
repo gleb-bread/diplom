@@ -6,6 +6,7 @@ export const __start__ = async function () {
     await setProjects();
     await setStructure();
     await setComponents();
+    await setUserProjects();
 };
 
 export const setProjects = async function () {
@@ -24,4 +25,10 @@ export const setComponents = async function () {
     const componentStore = useComponentStore();
 
     await componentStore.setComponents();
+};
+
+export const setUserProjects = async function () {
+    const projectStore = useProjectStore();
+
+    await projectStore.setUserProjects();
 };

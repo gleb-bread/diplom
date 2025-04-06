@@ -126,6 +126,42 @@ export class Project extends Service {
         });
     }
 
+    public async getUserProjects() {
+        const repository = new Repositories.Project();
+
+        const response = await repository.getUserProjects();
+
+        return new Promise<Response<ServiceTypes.GenericList<Models.Project>>>(
+            (resolve, reject) => {
+                this.validateRequest({
+                    response: response,
+
+                    success: async (response) => {
+                        const projectsDTO = response.response.data.data;
+                        const project = projectsDTO.map(DTOs.Project.toModel);
+
+                        resolve({
+                            status: response.status,
+                            result: response.result,
+                            data: {
+                                entities: this.getCacheObject(project, 'id'),
+                                genericList: this.getIndexList(project, 'id'),
+                            },
+                        });
+                    },
+
+                    error: (response) => {
+                        reject({
+                            status: response.status,
+                            result: response.result,
+                            data: response,
+                        });
+                    },
+                });
+            }
+        );
+    }
+
     public async createProjectElement(
         payload:
             | Models.ProjectCreateElement

@@ -27,7 +27,7 @@ export const Default: {
         class: ['text-body-2'],
     },
     [AliasesUI.NavigationProject]: {
-        width: 240,
+        width: 290,
         color: 'background',
         VList: {
             class: 'px-2',

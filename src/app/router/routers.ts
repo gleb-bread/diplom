@@ -23,4 +23,14 @@ export const routes: Array<RouteRecordRaw> = [
         name: RoutersNames.LOGIN,
         component: () => Components.login,
     },
+    {
+        path: '/projects',
+        name: RoutersNames.PROJECTS,
+        component: () => Components.projects,
+    },
+    {
+        path: '/user',
+        name: RoutersNames.USER,
+        component: () => Components.user,
+    },
 ];

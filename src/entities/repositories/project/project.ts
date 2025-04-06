@@ -116,4 +116,22 @@ export class Project extends Repositories.ARepository.ARepositorySecurity {
                 });
             });
     }
+
+    public async getUserProjects() {
+        this.addParamsInConfig({ path: 'getAll' });
+
+        return this.GET<
+            ARepositoryTypes.ServerResponse<DTOs.Project.ProjectDTO[]>
+        >()
+            .then((response) => {
+                return this.generateResponseSuccess({
+                    response: response,
+                });
+            })
+            .catch((response) => {
+                return this.generateResponseError({
+                    response: response,
+                });
+            });
+    }
 }

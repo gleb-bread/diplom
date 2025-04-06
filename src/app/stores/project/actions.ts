@@ -89,10 +89,27 @@ export const initActions = function (state: ReturnType<typeof initState>) {
         }
     };
 
+    const setUserProjects = async function () {
+        const service = new Services.Project();
+
+        const response = await service.getUserProjects();
+
+        if (response.result) {
+            state.genericList.value = response.data.genericList;
+            state.projects.value = response.data.entities;
+        }
+    };
+
     const restoreNewProjectElement = function () {
         state.newProjectElement.value =
             StoreTemplates.createNewProjectElement();
     };
 
-    return { setProject, createElement, updateElement, deleteElement };
+    return {
+        setProject,
+        createElement,
+        updateElement,
+        deleteElement,
+        setUserProjects,
+    };
 };
