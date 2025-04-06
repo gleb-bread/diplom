@@ -16,10 +16,9 @@ const config = new Config.Actions.Config(nameComponent);
 const componentStore = useComponentStore();
 const pageStore = useProjectElements();
 
-const pageId = pageStore.getSelectPage;
-
 const getSelectPage = computed(() => pageStore.getSelectPage);
-const handlerCreateComponent = new Handlers.CreateNewComponent(pageId);
+const handlerCreateComponent = () =>
+    new Handlers.CreateNewComponent(getSelectPage.value);
 
 const getComponentIds = computed(
     () => componentStore.getGenericList[getSelectPage.value]
@@ -33,12 +32,12 @@ const getComponentIds = computed(
                 new Actions.Click.ClickAction(
                     $event,
                     config,
-                    handlerCreateComponent
+                    handlerCreateComponent()
                 )
             )
         "
         :bg-color="$STYLE_VARIBLES.COLOR.BACKGROUND"
-        class="px-2"
+        class="px-2 h-100"
     >
         <template v-for="id in getComponentIds">
             <factory-component :component-id="id" :page-id="getSelectPage">

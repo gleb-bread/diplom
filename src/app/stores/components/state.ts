@@ -10,9 +10,6 @@ export const initState = function () {
 
     //Компонентные переменные
     const genericList = ref<ComponentStoreTypes.GenericList>({});
-    const selectPage = ref<number>(
-        Number(Helper.CookieAPI.getCookie(Env.Cookie.page) ?? 0)
-    );
     const componentMap = ref<Record<number, number>>({});
 
     const lastIndexNewComponent = ref(0);
@@ -21,7 +18,6 @@ export const initState = function () {
     return {
         components,
         genericList,
-        selectPage,
         lastIndexNewComponent,
         focusComponent,
         componentMap,
