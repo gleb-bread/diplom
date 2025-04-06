@@ -4,7 +4,6 @@ import modalWrapper from '../modal/modalWrapper.vue';
 import { useModalsStore } from '@/app/stores/modals';
 import textField from '../fields/outlined/textField.vue';
 import { useProjectStore } from '@/app/stores/project';
-import { useUserStore } from '@/app/stores/user';
 
 const modalsStore = useModalsStore();
 const projectStore = useProjectStore();
@@ -48,6 +47,10 @@ const updateProject = async function () {
     }
     closeModal();
 };
+
+const deleteProjectOpen = function () {
+    modalsStore.setInstant('deleteProject', true);
+};
 </script>
 
 <template>
@@ -58,6 +61,12 @@ const updateProject = async function () {
     >
         <textField label="Название проекта" v-model:model-value="getName" />
         <template #actions>
+            <VBtn
+                :color="$STYLE_VARIBLES.COLOR.ERROR"
+                @click.stop="deleteProjectOpen"
+            >
+                Удалить
+            </VBtn>
             <VBtn @click.stop="updateProject">Сохранить</VBtn>
         </template>
     </modalWrapper>

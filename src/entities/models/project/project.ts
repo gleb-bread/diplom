@@ -61,6 +61,10 @@ export class Project extends Models.Model<DTOs.Project.ProjectDTO> {
         return this._archive;
     }
 
+    public set archive(v: boolean) {
+        this._archive = v;
+    }
+
     public get user_id() {
         return this._user_id;
     }

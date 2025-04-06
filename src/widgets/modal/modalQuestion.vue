@@ -23,7 +23,7 @@ const getModelValue = computed({
 
 <template>
     <v-dialog v-model:model-value="getModelValue" max-width="600">
-        <v-card>
+        <v-card :color="$STYLE_VARIBLES.COLOR.WHITE">
             <v-toolbar class="pr-4" density="compact" :color="'primary'">
                 <v-toolbar-title>{{ title }}</v-toolbar-title>
                 <v-spacer></v-spacer>

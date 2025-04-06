@@ -7,6 +7,7 @@ import addProjectItem from './projects/addProjectItem.vue';
 import mobileAddProjectItem from './projects/mobileAddProjectItem.vue';
 import createProjectModal from '../modals/createProjectModal.vue';
 import changeProjectModal from '../modals/changeProjectModal.vue';
+import deleteProjectModal from '../modals/deleteProjectModal.vue';
 
 // Initialize store and router
 const projectStore = useProjectStore();
@@ -39,4 +40,5 @@ const getGenericList = computed(() => projectStore.getGenericList);
     </v-container>
     <createProjectModal />
     <changeProjectModal />
+    <deleteProjectModal />
 </template>

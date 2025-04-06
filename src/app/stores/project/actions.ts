@@ -141,7 +141,15 @@ export const initActions = function (state: ReturnType<typeof initState>) {
 
         if (response.result) {
             const project = response.data;
-            state.projects.value[project.id] = project;
+
+            if (project.archive) {
+                state.genericList.value = state.genericList.value.filter(
+                    (proejctId) => proejctId !== project.id
+                );
+                delete state.projects.value[project.id];
+            } else {
+                state.projects.value[project.id] = project;
+            }
         }
     };
 

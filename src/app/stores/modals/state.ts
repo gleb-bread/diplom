@@ -6,6 +6,7 @@ export const initState = function () {
     const instant = ref<StoreTypes.Instant>({
         changeProject: false,
         createProject: false,
+        deleteProject: false,
     });
 
     return { instant };
