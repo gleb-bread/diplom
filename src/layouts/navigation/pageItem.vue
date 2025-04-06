@@ -1,8 +1,17 @@
 <script lang="ts" setup>
 import type { ItemProps } from './props';
 import { useProjectElements } from '@/app/stores/projectElements';
-import { computed, ref } from 'vue';
+import { computed, ref, defineComponent } from 'vue';
 import { Helper } from '@/shared/helpers';
+import { Actions } from '@/shared/actions';
+import { Config } from '@/shared/config';
+import { Handlers } from '@/shared/handlers';
+
+const nameComponent = 'pageItem';
+
+defineComponent({ name: nameComponent });
+
+const config = new Config.Actions.Config(nameComponent);
 
 const props = defineProps<ItemProps>();
 const projectElements = useProjectElements();
@@ -11,12 +20,34 @@ const getTitle = computed(
     () => (idPage: string) => projectElements.getElements[idPage].name
 );
 
+const newName = ref('');
+
 const getElement = computed(() => projectElements.getElements[props.itemId]);
+
+const handlerUpdateProjectElement = () => {
+    activeRename.value = false;
+    getElement.value.name = newName.value;
+    return new Handlers.UpdateProjectElement(getElement.value);
+};
+
+const handlerDeleteProjectElement = new Handlers.DeleteProjectElement(
+    getElement.value
+);
 
 const { isActive, handleMouseEnter, handleMouseLeave } =
     Helper.ComponentsAPI.mouseOverHandler(0);
 
-const activeRename = ref(false);
+const renameMode = ref(false);
+
+const activeRename = computed({
+    get() {
+        return renameMode.value;
+    },
+    set(v: boolean) {
+        if (v) newName.value = getElement.value.name;
+        renameMode.value = v;
+    },
+});
 </script>
 
 <template>
@@ -31,7 +62,7 @@ const activeRename = ref(false);
                 <span class="font-xs no-select">{{ getTitle(itemId) }} </span>
             </template>
             <template v-else>
-                <input v-model="getElement.name" />
+                <input v-model="newName" />
             </template>
         </template>
         <template #append>
@@ -48,6 +79,15 @@ const activeRename = ref(false);
                 <VBtn
                     v-bind="props"
                     :size="$STYLE_VARIBLES.NAVIGATION.BTN_ICON_SIZE"
+                    @click.stop="
+                        $ACTION_MANAGER.pushAction(
+                            new Actions.Click.ClickAction(
+                                <any>$event,
+                                config,
+                                handlerDeleteProjectElement
+                            )
+                        )
+                    "
                     variant="text"
                 >
                     <v-icon>mdi-delete</v-icon>
@@ -59,7 +99,15 @@ const activeRename = ref(false);
                     v-bind="props"
                     :size="$STYLE_VARIBLES.NAVIGATION.BTN_ICON_SIZE"
                     variant="text"
-                    @click.stop="activeRename = false"
+                    @click.stop="
+                        $ACTION_MANAGER.pushAction(
+                            new Actions.Click.ClickAction(
+                                <any>$event,
+                                config,
+                                handlerUpdateProjectElement()
+                            )
+                        )
+                    "
                 >
                     <v-icon>mdi-check</v-icon>
                 </VBtn>

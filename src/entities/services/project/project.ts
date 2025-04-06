@@ -125,4 +125,124 @@ export class Project extends Service {
             });
         });
     }
+
+    public async createProjectElement(
+        payload:
+            | Models.ProjectCreateElement
+            | UnwrapRef<Models.ProjectCreateElement>
+    ) {
+        const repository = new Repositories.Project({
+            payload: payload.getDTO(),
+        });
+
+        const response = await repository.createElement();
+
+        return new Promise<Response<Types.Project.AnyProjectModels>>(
+            (resolve, reject) => {
+                this.validateRequest({
+                    response: response,
+
+                    success: async (response) => {
+                        const projectElementDTO = response.response.data.data;
+                        const element =
+                            Models.ProjectElement.createFromDTO(
+                                projectElementDTO
+                            );
+
+                        resolve({
+                            status: response.status,
+                            result: response.result,
+                            data: element,
+                        });
+                    },
+
+                    error: (response) => {
+                        reject({
+                            status: response.status,
+                            result: response.result,
+                            data: response,
+                        });
+                    },
+                });
+            }
+        );
+    }
+
+    public async updateProjectElement(
+        payload:
+            | Types.Project.AnyProjectModels
+            | UnwrapRef<Types.Project.AnyProjectModels>
+    ) {
+        const repository = new Repositories.Project({
+            payload: payload.getDTO(),
+        });
+
+        const response = await repository.updateElement();
+
+        return new Promise<Response<Types.Project.AnyProjectModels>>(
+            (resolve, reject) => {
+                this.validateRequest({
+                    response: response,
+
+                    success: async (response) => {
+                        const projectElementDTO = response.response.data.data;
+                        const element =
+                            Models.ProjectElement.createFromDTO(
+                                projectElementDTO
+                            );
+
+                        resolve({
+                            status: response.status,
+                            result: response.result,
+                            data: element,
+                        });
+                    },
+
+                    error: (response) => {
+                        reject({
+                            status: response.status,
+                            result: response.result,
+                            data: response,
+                        });
+                    },
+                });
+            }
+        );
+    }
+
+    public async deleteProjectElement(
+        payload:
+            | Types.Project.AnyProjectModels
+            | UnwrapRef<Types.Project.AnyProjectModels>
+    ) {
+        const repository = new Repositories.Project({
+            payload: payload.getDTO(),
+        });
+
+        const response = await repository.deleteElement();
+
+        return new Promise<Response<null>>((resolve, reject) => {
+            this.validateRequest({
+                response: response,
+
+                success: async (response) => {
+                    const data = response.response.data.data;
+
+                    resolve({
+                        status: response.status,
+                        result: response.result,
+                        data: data,
+                    });
+                },
+
+                error: (response) => {
+                    reject({
+                        status: response.status,
+                        result: response.result,
+                        data: response,
+                    });
+                },
+            });
+        });
+    }
 }

@@ -1,14 +1,35 @@
 <script lang="ts" setup>
 import type { ItemProps } from './props';
 import { useProjectElements } from '@/app/stores/projectElements';
-import { computed, ref } from 'vue';
+import { computed, ref, defineComponent } from 'vue';
 import * as Types from '@/shared/types';
 import pageItem from './pageItem.vue';
 import folderItem from './folderItem.vue';
 import { Helper } from '@/shared/helpers';
+import { Actions } from '@/shared/actions';
+import { Config } from '@/shared/config';
+import { Handlers } from '@/shared/handlers';
+
+const nameComponent = 'folderItem';
+
+defineComponent({ name: nameComponent });
+
+const config = new Config.Actions.Config(nameComponent);
 
 const props = defineProps<ItemProps>();
 const projectElements = useProjectElements();
+
+const handlerCreatePageElement = new Handlers.CreateNewProjectElement(
+    Types.Project.ElementTypes.PAGE,
+    props.itemId
+);
+
+const handlerCreateFolderElement = new Handlers.CreateNewProjectElement(
+    Types.Project.ElementTypes.FOLDER,
+    props.itemId
+);
+
+const newName = ref('');
 
 const getTitle = computed(() => getElement.value?.name ?? 'Нет');
 
@@ -18,10 +39,35 @@ const getElementById = computed(
     () => (id: string) => projectElements.getElements[id]
 );
 
-const { isActive, handleMouseEnter, handleMouseLeave } =
-    Helper.ComponentsAPI.mouseOverHandler(0);
+const {
+    isActive,
+    handleMouseEnter,
+    handleMouseLeave,
+    handleMenuMouseEnter,
+    handleMenuMouseLeave,
+} = Helper.ComponentsAPI.mouseOverHandler(0);
 
-const activeRename = ref(false);
+const renameMode = ref(false);
+
+const activeRename = computed({
+    get() {
+        return renameMode.value;
+    },
+    set(v: boolean) {
+        if (v) newName.value = getElement.value.name;
+        renameMode.value = v;
+    },
+});
+
+const handlerUpdateProjectElement = () => {
+    activeRename.value = false;
+    getElement.value.name = newName.value;
+    return new Handlers.UpdateProjectElement(getElement.value);
+};
+
+const handlerDeleteProjectElement = new Handlers.DeleteProjectElement(
+    getElement.value
+);
 </script>
 
 <template>
@@ -38,13 +84,75 @@ const activeRename = ref(false);
                 </template>
                 <template #append>
                     <template v-if="isActive && !activeRename">
-                        <VBtn
-                            v-bind="props"
-                            :size="$STYLE_VARIBLES.NAVIGATION.BTN_ICON_SIZE"
-                            variant="text"
+                        <v-menu
+                            @mouseenter="handleMenuMouseEnter"
+                            @mouseleave="handleMenuMouseLeave"
                         >
-                            <v-icon>mdi-plus</v-icon>
-                        </VBtn>
+                            <template #activator="{ props }">
+                                <VBtn
+                                    v-bind="props"
+                                    :size="
+                                        $STYLE_VARIBLES.NAVIGATION.BTN_ICON_SIZE
+                                    "
+                                    variant="text"
+                                >
+                                    <VIcon>mdi-plus</VIcon>
+                                </VBtn>
+                            </template>
+
+                            <NavigatorCard :elevation="1">
+                                <NavigatorList>
+                                    <v-list-item
+                                        @click.stop="
+                                            $ACTION_MANAGER.pushAction(
+                                                new Actions.Click.ClickAction(
+                                                    <any>$event,
+                                                    config,
+                                                    handlerCreatePageElement
+                                                )
+                                            )
+                                        "
+                                    >
+                                        <template #prepend>
+                                            <div class="mr-2">
+                                                <v-icon
+                                                    >mdi-list-box-outline</v-icon
+                                                >
+                                            </div>
+                                        </template>
+                                        <template #title>
+                                            <div class="font-xs">
+                                                Создать страницу
+                                            </div>
+                                        </template>
+                                    </v-list-item>
+                                    <v-list-item
+                                        @click.stop="
+                                            $ACTION_MANAGER.pushAction(
+                                                new Actions.Click.ClickAction(
+                                                    <any>$event,
+                                                    config,
+                                                    handlerCreateFolderElement
+                                                )
+                                            )
+                                        "
+                                    >
+                                        <template #prepend>
+                                            <div class="mr-2">
+                                                <v-icon
+                                                    >mdi-folder-outline</v-icon
+                                                >
+                                            </div>
+                                        </template>
+                                        <template #title>
+                                            <div class="font-xs">
+                                                Создать папку
+                                            </div>
+                                        </template>
+                                    </v-list-item>
+                                </NavigatorList>
+                            </NavigatorCard>
+                        </v-menu>
 
                         <VBtn
                             v-bind="props"
@@ -59,6 +167,15 @@ const activeRename = ref(false);
                             v-bind="props"
                             :size="$STYLE_VARIBLES.NAVIGATION.BTN_ICON_SIZE"
                             variant="text"
+                            @click.stop="
+                                $ACTION_MANAGER.pushAction(
+                                    new Actions.Click.ClickAction(
+                                        <any>$event,
+                                        config,
+                                        handlerDeleteProjectElement
+                                    )
+                                )
+                            "
                         >
                             <v-icon>mdi-delete</v-icon>
                         </VBtn>
@@ -69,7 +186,15 @@ const activeRename = ref(false);
                             v-bind="props"
                             :size="$STYLE_VARIBLES.NAVIGATION.BTN_ICON_SIZE"
                             variant="text"
-                            @click.stop="activeRename = false"
+                            @click.stop="
+                                $ACTION_MANAGER.pushAction(
+                                    new Actions.Click.ClickAction(
+                                        <any>$event,
+                                        config,
+                                        handlerUpdateProjectElement()
+                                    )
+                                )
+                            "
                         >
                             <v-icon>mdi-check</v-icon>
                         </VBtn>
@@ -89,7 +214,7 @@ const activeRename = ref(false);
                         <span class="font-xs no-select">{{ getTitle }} </span>
                     </template>
                     <template v-else>
-                        <input v-model="getElement.name" />
+                        <input v-model="newName" />
                     </template>
                 </template>
             </v-list-item>
@@ -109,15 +234,76 @@ const activeRename = ref(false);
                         </template>
                         <template #append>
                             <template v-if="isActive && !activeRename">
-                                <VBtn
-                                    v-bind="props"
-                                    :size="
-                                        $STYLE_VARIBLES.NAVIGATION.BTN_ICON_SIZE
-                                    "
-                                    variant="text"
+                                <v-menu
+                                    @mouseenter="handleMenuMouseEnter"
+                                    @mouseleave="handleMenuMouseLeave"
                                 >
-                                    <v-icon>mdi-plus</v-icon>
-                                </VBtn>
+                                    <template #activator="{ props }">
+                                        <VBtn
+                                            v-bind="props"
+                                            :size="
+                                                $STYLE_VARIBLES.NAVIGATION
+                                                    .BTN_ICON_SIZE
+                                            "
+                                            variant="text"
+                                        >
+                                            <VIcon>mdi-plus</VIcon>
+                                        </VBtn>
+                                    </template>
+
+                                    <NavigatorCard :elevation="1">
+                                        <NavigatorList>
+                                            <v-list-item
+                                                @click.stop="
+                                                    $ACTION_MANAGER.pushAction(
+                                                        new Actions.Click.ClickAction(
+                                                            <any>$event,
+                                                            config,
+                                                            handlerCreatePageElement
+                                                        )
+                                                    )
+                                                "
+                                            >
+                                                <template #prepend>
+                                                    <div class="mr-2">
+                                                        <v-icon
+                                                            >mdi-list-box-outline</v-icon
+                                                        >
+                                                    </div>
+                                                </template>
+                                                <template #title>
+                                                    <div class="font-xs">
+                                                        Создать страницу
+                                                    </div>
+                                                </template>
+                                            </v-list-item>
+                                            <v-list-item
+                                                @click.stop="
+                                                    $ACTION_MANAGER.pushAction(
+                                                        new Actions.Click.ClickAction(
+                                                            <any>$event,
+                                                            config,
+                                                            handlerCreateFolderElement
+                                                        )
+                                                    )
+                                                "
+                                            >
+                                                <template #prepend>
+                                                    <div class="mr-2">
+                                                        <v-icon
+                                                            >mdi-folder-outline</v-icon
+                                                        >
+                                                    </div>
+                                                </template>
+                                                <template #title>
+                                                    <div class="font-xs">
+                                                        Создать папку
+                                                    </div>
+                                                </template>
+                                            </v-list-item>
+                                        </NavigatorList>
+                                    </NavigatorCard>
+                                </v-menu>
 
                                 <VBtn
                                     v-bind="props"
@@ -136,6 +322,15 @@ const activeRename = ref(false);
                                         $STYLE_VARIBLES.NAVIGATION.BTN_ICON_SIZE
                                     "
                                     variant="text"
+                                    @click.stop="
+                                        $ACTION_MANAGER.pushAction(
+                                            new Actions.Click.ClickAction(
+                                                <any>$event,
+                                                config,
+                                                handlerDeleteProjectElement
+                                            )
+                                        )
+                                    "
                                 >
                                     <v-icon>mdi-delete</v-icon>
                                 </VBtn>
@@ -148,7 +343,15 @@ const activeRename = ref(false);
                                         $STYLE_VARIBLES.NAVIGATION.BTN_ICON_SIZE
                                     "
                                     variant="text"
-                                    @click.stop="activeRename = false"
+                                    @click.stop="
+                                        $ACTION_MANAGER.pushAction(
+                                            new Actions.Click.ClickAction(
+                                                <any>$event,
+                                                config,
+                                                handlerUpdateProjectElement()
+                                            )
+                                        )
+                                    "
                                 >
                                     <v-icon>mdi-check</v-icon>
                                 </VBtn>
@@ -172,7 +375,7 @@ const activeRename = ref(false);
                                 </span>
                             </template>
                             <template v-else>
-                                <input v-model="getElement.name" />
+                                <input v-model="newName" />
                             </template>
                         </template>
                     </v-list-item>

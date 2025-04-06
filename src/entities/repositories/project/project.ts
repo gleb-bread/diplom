@@ -66,8 +66,44 @@ export class Project extends Repositories.ARepository.ARepositorySecurity {
     }
 
     public async createElement() {
+        this.addParamsInConfig({ path: 'element' });
+
         return this.POST<
-            ARepositoryTypes.ServerResponse<DTOs.Project.ProjectDTO>
+            ARepositoryTypes.ServerResponse<Types.Project.AnyProjectElement>
+        >()
+            .then((response) => {
+                return this.generateResponseSuccess({
+                    response: response,
+                });
+            })
+            .catch((response) => {
+                return this.generateResponseError({
+                    response: response,
+                });
+            });
+    }
+
+    public async deleteElement() {
+        this.addParamsInConfig({ path: 'element' });
+
+        return this.DELETE<ARepositoryTypes.ServerResponse<null>>()
+            .then((response) => {
+                return this.generateResponseSuccess({
+                    response: response,
+                });
+            })
+            .catch((response) => {
+                return this.generateResponseError({
+                    response: response,
+                });
+            });
+    }
+
+    public async updateElement() {
+        this.addParamsInConfig({ path: 'element' });
+
+        return this.PATCH<
+            ARepositoryTypes.ServerResponse<Types.Project.AnyProjectElement>
         >()
             .then((response) => {
                 return this.generateResponseSuccess({

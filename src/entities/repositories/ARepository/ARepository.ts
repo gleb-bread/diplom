@@ -74,9 +74,19 @@ export class ARepository {
         return axios.put(this.getUrl(), data, config);
     }
 
-    protected async DELETE() {
-        const config = this.getConfigRequestGet();
-        return axios.delete(this.getUrl(), config);
+    protected async DELETE<T>() {
+        try {
+            const config = this.getConfigRequestGet();
+            const response = await axios.delete<T>(this.getUrl(), config);
+            return response;
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                throw error;
+            } else {
+                console.log('unexpected error: ', error);
+                throw new Error('Unexpected error occurred');
+            }
+        }
     }
 
     private getUrl() {

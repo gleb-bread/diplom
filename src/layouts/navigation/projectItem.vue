@@ -1,8 +1,28 @@
 <script lang="ts" setup>
 import type { ProjectProps } from './props';
 import { useProjectStore } from '@/app/stores/project';
-import { computed, ref } from 'vue';
+import { computed, defineComponent } from 'vue';
 import { Helper } from '@/shared/helpers';
+import { Actions } from '@/shared/actions';
+import { Config } from '@/shared/config';
+import { Handlers } from '@/shared/handlers';
+import * as Types from '@/shared/types';
+
+const nameComponent = 'projectItem';
+
+defineComponent({ name: nameComponent });
+
+const config = new Config.Actions.Config(nameComponent);
+
+const handlerCreatePageElement = new Handlers.CreateNewProjectElement(
+    Types.Project.ElementTypes.PAGE,
+    null
+);
+
+const handlerCreateFolderElement = new Handlers.CreateNewProjectElement(
+    Types.Project.ElementTypes.FOLDER,
+    null
+);
 
 const projectStore = useProjectStore();
 const getTitle = computed(() => projectStore.getProject?.name);
@@ -41,7 +61,17 @@ const {
 
                     <NavigatorCard :elevation="1">
                         <NavigatorList>
-                            <v-list-item>
+                            <v-list-item
+                                @click.stop="
+                                    $ACTION_MANAGER.pushAction(
+                                        new Actions.Click.ClickAction(
+                                            <any>$event,
+                                            config,
+                                            handlerCreatePageElement
+                                        )
+                                    )
+                                "
+                            >
                                 <template #prepend>
                                     <div class="mr-2">
                                         <v-icon>mdi-list-box-outline</v-icon>
@@ -51,7 +81,17 @@ const {
                                     <div class="font-xs">Создать страницу</div>
                                 </template>
                             </v-list-item>
-                            <v-list-item>
+                            <v-list-item
+                                @click.stop="
+                                    $ACTION_MANAGER.pushAction(
+                                        new Actions.Click.ClickAction(
+                                            <any>$event,
+                                            config,
+                                            handlerCreateFolderElement
+                                        )
+                                    )
+                                "
+                            >
                                 <template #prepend>
                                     <div class="mr-2">
                                         <v-icon>mdi-folder-outline</v-icon>

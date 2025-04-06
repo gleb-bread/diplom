@@ -20,4 +20,23 @@ export class ProjectCreateElement extends Models.Model<DTOs.CreateElementProject
             project_id: this._project_id,
         };
     }
+
+    public get type() {
+        return this._type;
+    }
+    public set type(v: Types.Project.ElementTypes) {
+        this._type = v;
+    }
+    public get folder_id() {
+        return this._folder_id;
+    }
+    public set folder_id(v: number | null) {
+        this._folder_id = v;
+    }
+    public get project_id() {
+        return this._project_id;
+    }
+    public set project_id(v: number) {
+        this._project_id = v;
+    }
 }

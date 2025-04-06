@@ -46,6 +46,14 @@ export class Folder extends ProjectElement {
         return this._items;
     }
 
+    public set items(v: Types.Project.AnyProjectModels[]) {
+        this._items = v;
+    }
+
+    public unshiftItem(v: Types.Project.AnyProjectModels) {
+        this._items.unshift(v);
+    }
+
     public get items_generic_list() {
         return Helper.ProjectElementsAPI.getIndexListWithGroupedAlphabeticalSorting(
             this._items,

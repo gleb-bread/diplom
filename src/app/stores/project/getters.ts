@@ -5,6 +5,7 @@ import { Env } from '@/shared/env';
 
 export const initGetters = function (state: ReturnType<typeof initState>) {
     const getProject = computed(() => state.project.value);
+    const getNewProjectElement = computed(() => state.newProjectElement.value);
 
-    return { getProject };
+    return { getProject, getNewProjectElement };
 };

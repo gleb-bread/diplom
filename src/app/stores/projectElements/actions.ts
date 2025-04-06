@@ -21,5 +21,9 @@ export const initActions = function (state: ReturnType<typeof initState>) {
         }
     };
 
-    return { setStructure };
+    const setGenericList = function (list: string[]) {
+        state.genericList.value = list;
+    };
+
+    return { setStructure, setGenericList };
 };

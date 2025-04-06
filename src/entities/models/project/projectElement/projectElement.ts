@@ -61,6 +61,10 @@ export class ProjectElement extends Models.Model<DTOs.ProjectElement.ProjectElem
         return this._name;
     }
 
+    public set name(v: string) {
+        this._name = v;
+    }
+
     public get private() {
         return this._private;
     }
