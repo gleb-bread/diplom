@@ -26,7 +26,9 @@ export const routes: Array<RouteRecordRaw> = [
     {
         path: '/projects',
         name: RoutersNames.PROJECTS,
+        meta: { requiresAuth: true },
         component: () => Components.projects,
+        beforeEnter: LoadingAPI.Projects.__start__,
     },
     {
         path: '/user',

@@ -4,4 +4,5 @@ export enum STORES {
     PROJECT_ELEMENTS = 'projectElements',
     COMPONENT_STORE = 'componentStore',
     SETTINGS_STORE = 'settingsStore',
+    MODALS_STORE = 'modalsStore',
 }

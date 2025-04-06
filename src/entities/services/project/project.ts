@@ -62,12 +62,50 @@ export class Project extends Service {
         });
     }
 
-    public async addProject(
+    public async createProject(
+        project: Models.CreateProject | UnwrapRef<Models.CreateProject>
+    ) {
+        const repository = new Repositories.Project({
+            payload: project.getDTO(),
+        });
+
+        const response = await repository.createProject();
+
+        return new Promise<Response<Models.Project>>((resolve, reject) => {
+            this.validateRequest({
+                response: response,
+
+                success: async (response) => {
+                    const projectDTO = response.response.data.data;
+                    const project = DTOs.Project.toModel(projectDTO);
+
+                    resolve({
+                        status: response.status,
+                        result: response.result,
+                        data: project,
+                    });
+                },
+
+                error: (response) => {
+                    reject({
+                        status: response.status,
+                        result: response.result,
+                        data: response,
+                    });
+                },
+            });
+        });
+    }
+
+    public async updateProject(
         project: Models.Project | UnwrapRef<Models.Project>
     ) {
-        const repository = new Repositories.Project();
+        const repository = new Repositories.Project({
+            payload: project.getDTO(),
+            id: project.id,
+        });
 
-        const response = await repository.addProject(project.getDTO());
+        const response = await repository.updateProject();
 
         return new Promise<Response<Models.Project>>((resolve, reject) => {
             this.validateRequest({

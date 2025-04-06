@@ -29,10 +29,24 @@ export class Project extends Repositories.ARepository.ARepositorySecurity {
             });
     }
 
-    public async addProject(project: DTOs.Project.ProjectDTO) {
-        this.addParamsInConfig({ payload: project });
-
+    public async createProject() {
         return this.POST<
+            ARepositoryTypes.ServerResponse<DTOs.Project.ProjectDTO>
+        >()
+            .then((response) => {
+                return this.generateResponseSuccess({
+                    response: response,
+                });
+            })
+            .catch((response) => {
+                return this.generateResponseError({
+                    response: response,
+                });
+            });
+    }
+
+    public async updateProject() {
+        return this.PATCH<
             ARepositoryTypes.ServerResponse<DTOs.Project.ProjectDTO>
         >()
             .then((response) => {

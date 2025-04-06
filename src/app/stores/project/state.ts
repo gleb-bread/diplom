@@ -11,5 +11,18 @@ export const initState = function () {
         StoreTemplates.createNewProjectElement()
     );
 
-    return { project, newProjectElement, genericList, projects };
+    const newProject = ref<Models.CreateProject>(
+        StoreTemplates.createNewProject()
+    );
+
+    const selectProject = ref<number | null>(null);
+
+    return {
+        project,
+        newProjectElement,
+        genericList,
+        projects,
+        newProject,
+        selectProject,
+    };
 };

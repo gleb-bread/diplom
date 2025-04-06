@@ -7,6 +7,7 @@ import * as Markdown from './markdown';
 import { ObjectAPI } from './object';
 import { ProjectElementsAPI } from './projectElements';
 import { ComponentsAPI } from './components';
+import { DateAPI } from './date';
 
 export const Helper = {
     RouterAPI,
@@ -18,4 +19,5 @@ export const Helper = {
     ObjectAPI,
     ProjectElementsAPI,
     ComponentsAPI,
+    DateAPI,
 };

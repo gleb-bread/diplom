@@ -1,3 +1,7 @@
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+import projectsContent from '@/widgets/projects/projectsContent.vue';
+</script>
 
-<template>projects</template>
+<template>
+    <projectsContent />
+</template>

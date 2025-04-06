@@ -8,6 +8,15 @@ export const initGetters = function (state: ReturnType<typeof initState>) {
     const getNewProjectElement = computed(() => state.newProjectElement.value);
     const getGenericList = computed(() => state.genericList.value);
     const getProjects = computed(() => state.projects.value);
+    const getNewProject = computed(() => state.newProject.value);
+    const getSelectProject = computed(() => state.selectProject.value);
 
-    return { getProject, getNewProjectElement, getGenericList, getProjects };
+    return {
+        getProject,
+        getNewProjectElement,
+        getGenericList,
+        getProjects,
+        getNewProject,
+        getSelectProject,
+    };
 };
