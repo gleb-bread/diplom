@@ -10,6 +10,8 @@ export type ApiComponentDTO = DTOs.Component.ComponentDTO & {
     cookies: DTOs.ApiComponentCookie.ApiComponentCookieDTO[];
     headers: DTOs.ApiComponentHeader.ApiComponentHeaderDTO[];
     params: DTOs.ApiComponentParam.ApiComponentParamDTO[];
+    status: null | Types.Component.ApiComponentStatuses;
+    response: null | string;
     created_at: string | null;
     updated_at: string | null;
 };

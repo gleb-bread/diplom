@@ -30,3 +30,9 @@ export type AnyApiComponentDataModel =
 
 export type AllTypesValuesApiComponentData =
     (typeof ApiComponentDataTypes)[keyof typeof ApiComponentDataTypes];
+
+export type ApiComponentStatuses =
+    | 'pending'
+    | 'in-progress'
+    | 'completed'
+    | 'failed';

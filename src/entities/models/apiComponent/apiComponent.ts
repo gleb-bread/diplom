@@ -10,6 +10,8 @@ export class ApiComponent extends Component {
     private _url: string | null;
     private _created_at: string | null;
     private _updated_at: string | null;
+    private _status: Types.Component.ApiComponentStatuses | null;
+    private _response: JSON | null;
     private _cookies: Models.ApiComponentCookie[];
     private _headers: Models.ApiComponentHeader[];
     private _params: Models.ApiComponentParam[];
@@ -25,6 +27,8 @@ export class ApiComponent extends Component {
         this._cookies = dto.cookies.map(DTOs.ApiComponentCookie.toModel);
         this._headers = dto.headers.map(DTOs.ApiComponentHeader.toModel);
         this._params = dto.params.map(DTOs.ApiComponentParam.toModel);
+        this._status = dto.status;
+        this._response = dto.response ? JSON.parse(dto.response) : null;
     }
     public getDTO(): DTOs.ApiComponent.ApiComponentDTO {
         const parentDTO = super.getDTO();
@@ -40,6 +44,8 @@ export class ApiComponent extends Component {
             params: this._params.map((item) => item.getDTO()),
             created_at: this._created_at,
             updated_at: this._updated_at,
+            status: this._status,
+            response: this._response ? JSON.stringify(this._response) : null,
         };
     }
 
@@ -87,5 +93,12 @@ export class ApiComponent extends Component {
     }
     public set params(v: Models.ApiComponentParam[]) {
         this._params = v;
+    }
+    public get status() {
+        return this._status;
+    }
+
+    public get response() {
+        return this._response;
     }
 }
