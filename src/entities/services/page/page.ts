@@ -47,8 +47,14 @@ export class Page extends Service {
                         status: response.status,
                         result: response.result,
                         data: {
-                            entities: this.getCacheObject(components, 'id'),
-                            genericList: this.getIndexList(components, 'id'),
+                            entities: this.getCacheObject(
+                                components,
+                                'component_id'
+                            ),
+                            genericList: this.getIndexList(
+                                components,
+                                'component_id'
+                            ),
                         },
                     });
                 },

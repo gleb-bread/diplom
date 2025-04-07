@@ -4,13 +4,17 @@ import type { Props } from './props';
 import { computed } from 'vue';
 import { useComponentStore } from '@/app/stores/components';
 import textAreaComponent from './TextComponent/textAreaComponent.vue';
+import * as Models from '@/entities/models';
 
 const props = defineProps<Props>();
 
 const componentStore = useComponentStore();
 
 const component = computed(
-    () => componentStore.getComponents[props.pageId][props.componentId]
+    () =>
+        <Models.TextComponent>(
+            componentStore.getComponents[props.pageId][props.componentId]
+        )
 );
 </script>
 

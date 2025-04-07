@@ -2,13 +2,17 @@
 import type { Props } from '../props';
 import { ref, onMounted, watch, nextTick, computed } from 'vue';
 import { useComponentStore } from '@/app/stores/components';
+import * as Models from '@/entities/models';
 
 const props = defineProps<Props>();
 
 const componentStore = useComponentStore();
 
 const component = computed(
-    () => componentStore.getComponents[props.pageId][props.componentId]
+    () =>
+        <Models.TextComponent>(
+            componentStore.getComponents[props.pageId][props.componentId]
+        )
 );
 
 const textareaRef = ref<HTMLTextAreaElement | null>(null);

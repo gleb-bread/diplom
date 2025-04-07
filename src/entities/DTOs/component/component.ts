@@ -3,6 +3,7 @@ import * as Models from '@/entities/models';
 export type ComponentDTO = {
     id: number;
     page_id: number;
+    component_id: number;
 };
 
 export const toModel = function (dto: ComponentDTO) {

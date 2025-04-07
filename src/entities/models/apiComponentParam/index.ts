@@ -1,0 +1,1 @@
+export { ApiComponentParam } from './apiComponentHeader';

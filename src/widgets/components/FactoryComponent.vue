@@ -6,6 +6,7 @@ import { computed } from 'vue';
 import { Helper } from '@/shared/helpers';
 import * as Types from '@/shared/types';
 import textComponent from './textComponent.vue';
+import apiComponent from './apiComponent.vue';
 
 const props = defineProps<Props>();
 const componentStore = useComponentStore();
@@ -22,5 +23,11 @@ const component = computed(
             :component-id="props.componentId"
         >
         </textComponent>
+    </template>
+    <template v-if="component.type === Types.Component.Types.API">
+        <apiComponent
+            :page-id="props.pageId"
+            :component-id="props.componentId"
+        />
     </template>
 </template>

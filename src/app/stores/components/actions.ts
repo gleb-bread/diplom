@@ -47,7 +47,7 @@ export const initActions = function (state: ReturnType<typeof initState>) {
             pageStore.getSelectPage ??
             Helper.CookieAPI.getCookie(Env.Cookie.page);
 
-        const component: Models.TextComponent | null =
+        const component: Types.Component.AnyComponentModel | null =
             state.components.value[pageId][id];
 
         if (!component) {
