@@ -6,6 +6,9 @@ import { CreateNewProjectElement } from './createNewProjectElement';
 import { UpdateProjectElement } from './updateProjectElement';
 import { DeleteProjectElement } from './deleteProjectElement';
 import { SetSelectPage } from './setSelectPage';
+import { CreateNewApiCompnentData } from './createNewApiComponentData';
+import { DeleteApiComponentData } from './deleteApiComponentData';
+import { UpdateApiComponentData } from './updateApiComponentData';
 
 export const Handlers = {
     HoverComponent,
@@ -16,4 +19,7 @@ export const Handlers = {
     UpdateProjectElement,
     DeleteProjectElement,
     SetSelectPage,
+    CreateNewApiCompnentData,
+    DeleteApiComponentData,
+    UpdateApiComponentData,
 };

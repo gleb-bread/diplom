@@ -9,6 +9,8 @@ import * as Models from '@/entities/models';
 import * as Types from '@/shared/types';
 
 export const initActions = function (state: ReturnType<typeof initState>) {
+    const projectElementsStore = useProjectElements();
+
     const setComponents = async function (publicId: string | null = null) {
         const service = new Services.Page();
         const projectElements = useProjectElements();
@@ -122,13 +124,80 @@ export const initActions = function (state: ReturnType<typeof initState>) {
     };
 
     const getComponentHashById = function (componentId: number) {
-        const projectElementsStore = useProjectElements();
-
         const pageId = projectElementsStore.getSelectPage ?? 0;
 
         const page = projectElementsStore.getElements[pageId];
 
         return `${page.hash}-${componentId}`;
+    };
+
+    const addApiComponentData = async function (
+        componentId: number,
+        type: Types.Component.ApiComponentDataTypes
+    ) {
+        const pageId = projectElementsStore.getSelectPage ?? 0;
+
+        const component = state.components.value[pageId][componentId];
+
+        const newData = new Models.CreateApiComponentData({
+            api_component_id: component.id,
+            type: type,
+        });
+
+        const service = new Services.Component();
+
+        const response = await service.createApiComponentData(newData);
+
+        if (response.result) {
+            const apiComponentData = response.data;
+
+            StoreHelper.addApiComponentDataInComponent(
+                component,
+                apiComponentData
+            );
+        }
+    };
+
+    const deleteApiComponentData = async function (
+        componentId: number,
+        componentData: Types.Component.AnyApiComponentDataModel
+    ) {
+        const pageId = projectElementsStore.getSelectPage ?? 0;
+
+        const component = state.components.value[pageId][componentId];
+
+        const service = new Services.Component();
+
+        const response = await service.deleteApiComponentData(componentData);
+
+        if (response.result) {
+            StoreHelper.deleteApiComponentDataInComponent(
+                component,
+                componentData
+            );
+        }
+    };
+
+    const updateApiComponentData = async function (
+        componentId: number,
+        componentData: Types.Component.AnyApiComponentDataModel
+    ) {
+        const pageId = projectElementsStore.getSelectPage ?? 0;
+
+        const component = state.components.value[pageId][componentId];
+
+        const service = new Services.Component();
+
+        const response = await service.updateApiComponentData(componentData);
+
+        if (response.result) {
+            const apiComponentData = response.data;
+
+            StoreHelper.updateApiComponentDataInComponent(
+                component,
+                apiComponentData
+            );
+        }
     };
 
     return {
@@ -139,5 +208,8 @@ export const initActions = function (state: ReturnType<typeof initState>) {
         disableFocusComponent,
         restoreFocusComponent,
         saveUpdateComponent,
+        addApiComponentData,
+        deleteApiComponentData,
+        updateApiComponentData,
     };
 };

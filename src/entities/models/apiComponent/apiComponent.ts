@@ -73,10 +73,19 @@ export class ApiComponent extends Component {
     public get cookies() {
         return this._cookies;
     }
+    public set cookies(v: Models.ApiComponentCookie[]) {
+        this._cookies = v;
+    }
     public get headers() {
         return this._headers;
     }
+    public set headers(v: Models.ApiComponentHeader[]) {
+        this._headers = v;
+    }
     public get params() {
         return this._params;
+    }
+    public set params(v: Models.ApiComponentParam[]) {
+        this._params = v;
     }
 }

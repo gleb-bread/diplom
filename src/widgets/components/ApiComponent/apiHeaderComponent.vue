@@ -31,8 +31,10 @@ function cancelEditing() {
 }
 
 function saveName() {
+    component.value.name = editedName.value;
     componentStore.saveUpdateComponent(props.componentId);
     editing.value = false;
+    editedName.value = '';
 }
 </script>
 
@@ -43,7 +45,8 @@ function saveName() {
                 <input
                     v-model="editedName"
                     class="custom-input"
-                    @keyup.enter="saveName"
+                    @keydown.enter="saveName"
+                    @keydown.esc="cancelEditing"
                     @blur="cancelEditing"
                 />
                 <VBtn

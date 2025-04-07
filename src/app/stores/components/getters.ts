@@ -9,7 +9,6 @@ export const initGetters = function (state: ReturnType<typeof initState>) {
 
     //Компонентные геттеры
     const getGenericList = computed(() => state.genericList.value);
-    const getSelectPage = computed(() => state.selectPage.value);
 
     const getFocusComponentHash = computed(() => {
         const componentId = state.focusComponent.value ?? 0;
@@ -20,7 +19,6 @@ export const initGetters = function (state: ReturnType<typeof initState>) {
     return {
         getComponents,
         getGenericList,
-        getSelectPage,
         getFocusComponentHash,
     };
 };

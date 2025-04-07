@@ -1,12 +1,22 @@
 <script lang="ts" setup>
 import type { Props } from '../props';
-import { computed } from 'vue';
+import { computed, defineComponent } from 'vue';
 import { useComponentStore } from '@/app/stores/components';
 import * as Models from '@/entities/models';
+import { Handlers } from '@/shared/handlers';
+import { Actions } from '@/shared/actions';
+import { Config } from '@/shared/config';
+import * as Types from '@/shared/types';
+
+const nameComponent = 'apiHeadersComponent';
+
+defineComponent({ name: nameComponent });
 
 const props = defineProps<Props>();
 
 const componentStore = useComponentStore();
+
+const config = new Config.Actions.Config(nameComponent);
 
 const component = computed(
     () =>
@@ -17,24 +27,40 @@ const component = computed(
 
 const headers = computed(() => component.value.headers ?? []);
 
-function addHeader() {
-    headers.value.push(
-        new Models.ApiComponentHeader({
-            api_component_id: component.value.id,
-            created_at: '',
-            id: -1,
-            key: '',
-            updated_at: '',
-            value: '',
-        })
-    );
-    componentStore.saveUpdateComponent(props.componentId);
-}
+const handlerAddApiComponentHeader = new Handlers.CreateNewApiCompnentData(
+    component.value.component_id,
+    Types.Component.ApiComponentDataTypes.HEADER
+);
 
-function removeHeader(index: number) {
-    headers.value.splice(index, 1);
-    componentStore.saveUpdateComponent(props.componentId);
-}
+const handlerDeleteApiCompoentHeader = (Header: Models.ApiComponentHeader) => {
+    return new Handlers.DeleteApiComponentData(
+        component.value.component_id,
+        Header
+    );
+};
+
+const handlerUpdateApiComponentHeader = (Header: Models.ApiComponentHeader) => {
+    return new Handlers.UpdateApiComponentData(
+        component.value.component_id,
+        Header
+    );
+};
+
+const updateHeaderKey = async function (
+    Header: Models.ApiComponentHeader,
+    event: string
+) {
+    Header.key = event;
+    handlerUpdateApiComponentHeader(Header).__handle();
+};
+
+const updateHeaderValue = async function (
+    Header: Models.ApiComponentHeader,
+    event: string
+) {
+    Header.value = event;
+    handlerUpdateApiComponentHeader(Header).__handle();
+};
 </script>
 
 <template>
@@ -49,26 +75,53 @@ function removeHeader(index: number) {
                 class="d-flex align-center mb-2"
             >
                 <v-text-field
-                    v-model="header.key"
+                    :model-value="header.key"
+                    @update:model-value="updateHeaderKey(header, $event)"
                     label="Ключ"
                     variant="outlined"
                     density="compact"
                     class="mr-2"
                 />
                 <v-text-field
-                    v-model="header.value"
+                    :model-value="header.value"
+                    @update:model-value="updateHeaderValue(header, $event)"
                     label="Значение"
                     variant="outlined"
                     density="compact"
                     class="mr-2"
                 />
-                <v-btn density="compact" icon @click="removeHeader(index)">
+                <v-btn
+                    density="compact"
+                    icon
+                    :color="$STYLE_VARIBLES.COLOR.BACKGROUND"
+                    @click.stop="
+                        $ACTION_MANAGER.pushAction(
+                            new Actions.Click.ClickAction(
+                                <any>$event,
+                                config,
+                                handlerDeleteApiCompoentHeader(header)
+                            )
+                        )
+                    "
+                >
                     <v-icon>mdi-delete</v-icon>
                 </v-btn>
             </div>
-            <v-btn color="primary" density="compact" @click="addHeader"
-                >Добавить заголовок</v-btn
+            <v-btn
+                color="primary"
+                density="compact"
+                @click.stop="
+                    $ACTION_MANAGER.pushAction(
+                        new Actions.Click.ClickAction(
+                            <any>$event,
+                            config,
+                            handlerAddApiComponentHeader
+                        )
+                    )
+                "
             >
+                Добавить заголовок
+            </v-btn>
         </v-expansion-panel-text>
     </v-expansion-panel>
 </template>
