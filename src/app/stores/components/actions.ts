@@ -7,6 +7,7 @@ import { useProjectElements } from '../projectElements';
 import { useProjectStore } from '../project';
 import * as Models from '@/entities/models';
 import * as Types from '@/shared/types';
+import type { UnwrapRef } from 'vue';
 
 export const initActions = function (state: ReturnType<typeof initState>) {
     const projectElementsStore = useProjectElements();
@@ -200,6 +201,16 @@ export const initActions = function (state: ReturnType<typeof initState>) {
         }
     };
 
+    const testApiComponent = async function (
+        component:
+            | Types.Component.AnyComponentModel
+            | UnwrapRef<Types.Component.AnyComponentModel>
+    ) {
+        const service = new Services.Component();
+
+        const response = await service.testApiComponent(component);
+    };
+
     return {
         setComponents,
         pushNewElement,
@@ -211,5 +222,6 @@ export const initActions = function (state: ReturnType<typeof initState>) {
         addApiComponentData,
         deleteApiComponentData,
         updateApiComponentData,
+        testApiComponent,
     };
 };

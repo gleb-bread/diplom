@@ -9,6 +9,7 @@ import { SetSelectPage } from './setSelectPage';
 import { CreateNewApiCompnentData } from './createNewApiComponentData';
 import { DeleteApiComponentData } from './deleteApiComponentData';
 import { UpdateApiComponentData } from './updateApiComponentData';
+import { TestApiComponent } from './testApiComponent';
 
 export const Handlers = {
     HoverComponent,
@@ -22,4 +23,5 @@ export const Handlers = {
     CreateNewApiCompnentData,
     DeleteApiComponentData,
     UpdateApiComponentData,
+    TestApiComponent,
 };

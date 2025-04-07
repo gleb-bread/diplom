@@ -167,4 +167,44 @@ export class Component extends Service {
             }
         );
     }
+
+    public async testApiComponent(
+        component:
+            | Types.Component.AnyComponentModel
+            | UnwrapRef<Types.Component.AnyComponentModel>
+    ) {
+        const repository = new Repositories.Component({
+            path: `api-component/${component.id}/test`,
+        });
+
+        const response = await repository.testApiComponent();
+
+        return new Promise<Response<Types.Component.AnyComponentModel>>(
+            (resolve, reject) => {
+                this.validateRequest({
+                    response: response,
+
+                    success: async (response) => {
+                        const apiComponentDTO = response.response.data.data;
+                        const apiComponentModel =
+                            Models.Component.createFromDTO(apiComponentDTO);
+
+                        resolve({
+                            status: response.status,
+                            result: response.result,
+                            data: apiComponentModel,
+                        });
+                    },
+
+                    error: (response) => {
+                        reject({
+                            status: response.status,
+                            result: response.result,
+                            data: response,
+                        });
+                    },
+                });
+            }
+        );
+    }
 }

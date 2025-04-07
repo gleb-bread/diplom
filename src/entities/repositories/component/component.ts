@@ -72,4 +72,20 @@ export class Component extends Repositories.ARepository.ARepositorySecurity {
                 });
             });
     }
+
+    public async testApiComponent() {
+        return this.POST<
+            ARepositoryTypes.ServerResponse<Types.Component.AnyComponentDTO>
+        >()
+            .then((response) => {
+                return this.generateResponseSuccess({
+                    response: response,
+                });
+            })
+            .catch((response) => {
+                return this.generateResponseError({
+                    response: response,
+                });
+            });
+    }
 }
