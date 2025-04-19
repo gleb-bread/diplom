@@ -20,9 +20,9 @@ const getSelectPage = computed(() => pageStore.getSelectPage);
 const handlerCreateComponent = () =>
     new Handlers.CreateNewComponent(getSelectPage.value);
 
-const getComponentIds = computed(
-    () => componentStore.getGenericList[getSelectPage.value]
-);
+const getComponentIds = computed(() => {
+    return componentStore.getGenericList[getSelectPage.value];
+});
 </script>
 
 <template>
@@ -39,7 +39,7 @@ const getComponentIds = computed(
         :bg-color="$STYLE_VARIBLES.COLOR.BACKGROUND"
         class="px-2 h-100"
     >
-        <template v-for="id in getComponentIds">
+        <template v-for="id in getComponentIds" :key="`component${id}`">
             <factory-component :component-id="id" :page-id="getSelectPage">
             </factory-component>
         </template>

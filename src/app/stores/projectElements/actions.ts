@@ -51,6 +51,8 @@ export const initActions = function (state: ReturnType<typeof initState>) {
             }
         );
 
+        componentStore.resetComponentMap();
+
         await componentStore.setComponents();
     };
 

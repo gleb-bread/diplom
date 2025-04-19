@@ -26,9 +26,9 @@ const handlerSaveUpdateComponent = new Handlers.SaveUpdateComponent(
     props.componentId
 );
 
-const componentId = computed(() =>
-    componentStore.getComponentHashById(props.componentId)
-);
+const componentId = computed(() => {
+    return componentStore.getComponentHashById(props.componentId);
+});
 
 const getFocus = computed({
     get() {

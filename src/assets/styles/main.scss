@@ -1,5 +1,94 @@
-@import "./index.scss";
+@import './index.scss';
 
 body {
-  font-family: $Montserrat, sans-serif;
+    font-family: $Montserrat, sans-serif;
+}
+
+/* Ссылки */
+.diplim_link {
+    color: #4e9af1;
+    text-decoration: none;
+    border-bottom: 1px dashed #4e9af1;
+    transition: all 0.2s ease;
+}
+.diplim_link:hover {
+    color: #1c6fd8;
+    border-bottom: 1px solid #1c6fd8;
+}
+
+/* Полужирный и курсив */
+.diplim_bold {
+    font-weight: bold;
+}
+.diplim_italic {
+    font-style: italic;
+}
+
+/* Inline code */
+.diplim_inline_code {
+    background-color: #f4f4f4;
+    color: #d63384;
+    font-family: monospace;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.95em;
+    border: 1px solid #e0e0e0;
+}
+
+/* Нумерованные списки */
+.diplim_numbered_list {
+    padding-left: 20px;
+    list-style-position: inside;
+    counter-reset: custom-counter;
+}
+.diplim_numbered_list_item {
+    margin-bottom: 8px;
+    position: relative;
+    padding-left: 20px;
+}
+.diplim_numbered_list_item::before {
+    counter-increment: custom-counter;
+    content: counter(custom-counter) '.';
+    position: absolute;
+    left: 0;
+    color: #888;
+}
+
+/* Маркированные списки */
+.diplim_bulleted_list {
+    padding-left: 20px;
+    list-style: none;
+}
+.diplim_bulleted_list_item {
+    position: relative;
+    margin-bottom: 8px;
+    padding-left: 20px;
+}
+.diplim_bulleted_list_item::before {
+    content: '-';
+    position: absolute;
+    left: 0;
+    color: #555;
+    font-weight: bold;
+}
+
+/* Таблицы */
+.dimplim_table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    font-size: 0.95em;
+    border: 1px solid #000; /* ← Чёрная обводка */
+}
+
+.dimplim_header_item {
+    padding: 10px;
+    text-align: left;
+    font-weight: bold;
+    border: 1px solid #000;
+}
+
+.dimplim_body_item {
+    padding: 10px;
+    border: 1px solid #000;
 }

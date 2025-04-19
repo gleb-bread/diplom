@@ -80,7 +80,7 @@ export const initActions = function (state: ReturnType<typeof initState>) {
                 return;
             }
 
-            state.componentMap.value[id] = response.data.id;
+            state.componentMap.value[id] = response.data.component_id;
 
             const requestComponent = createRequestComponent(component);
 
@@ -211,6 +211,10 @@ export const initActions = function (state: ReturnType<typeof initState>) {
         const response = await service.testApiComponent(component);
     };
 
+    const resetComponentMap = function () {
+        state.componentMap.value = {};
+    };
+
     return {
         setComponents,
         pushNewElement,
@@ -223,5 +227,6 @@ export const initActions = function (state: ReturnType<typeof initState>) {
         deleteApiComponentData,
         updateApiComponentData,
         testApiComponent,
+        resetComponentMap,
     };
 };
